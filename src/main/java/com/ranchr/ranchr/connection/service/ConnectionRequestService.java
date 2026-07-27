@@ -54,11 +54,12 @@ public class ConnectionRequestService {
 							"Your previous request was declined. The owner must reactivate the listing before you can request again.");
 				});
 
-		ConnectionRequest request = new ConnectionRequest();
-		request.setListing(listing);
-		request.setInterestedUser(interestedUser);
-		request.setMessage(message);
-		request.setListingActivationCycle(listing.getActivationCycle());
+		ConnectionRequest request = ConnectionRequest.builder()
+											.listing(listing)
+											.interestedUser(interestedUser)
+											.message(message)
+											.listingActivationCycle(listing.getActivationCycle())
+											.build();
 
 		try {
 			ConnectionRequest saved = connectionRequestRepository.save(request);

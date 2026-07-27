@@ -6,6 +6,7 @@ import com.ranchr.authentication.dto.RefreshRequest;
 import com.ranchr.authentication.dto.RegisterRequest;
 import com.ranchr.authentication.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +30,11 @@ public class AuthController {
 
 	@Operation(
 			summary = "Register a new user",
-			description = "Creates a new user account and returns JWT access and refresh tokens."
+			description = "Creates a new user account and returns JWT access and refresh tokens. " +
+								  "Email must be valid format. Username must be unique."
 	)
+	@ApiResponse(responseCode = "201", description = "User created, tokens returned")
+	@ApiResponse(responseCode = "409", description = "Username or email already taken")
 	@PostMapping("register")
 	public ResponseEntity<AuthResponse> register(
 			@Valid @RequestBody RegisterRequest request) {
@@ -39,8 +43,11 @@ public class AuthController {
 
 	@Operation(
 			summary = "Login",
-			description = "Authenticates a user and returns JWT access and refresh tokens."
+			description = "Authenticates with username and password. Returns JWT access and refresh tokens. " +
+								  "Error message is intentionally generic: 'Invalid username or password'."
 	)
+	@ApiResponse(responseCode = "200", description = "Authenticated, tokens returned")
+	@ApiResponse(responseCode = "401", description = "Invalid username or password")
 	@PostMapping("login")
 	public ResponseEntity<AuthResponse> login(
 			@Valid @RequestBody LoginRequest request
@@ -50,8 +57,11 @@ public class AuthController {
 
 	@Operation(
 			summary = "Refresh access token",
-			description = "Generates a new access token using a valid refresh token."
+			description = "Generates a new access/refresh token pair from a valid refresh token. " +
+								  "Access token TTL: 15 min. Refresh token TTL: 7 days."
 	)
+	@ApiResponse(responseCode = "200", description = "New token pair returned")
+	@ApiResponse(responseCode = "401", description = "Invalid or expired refresh token")
 	@PostMapping("refresh")
 	public ResponseEntity<AuthResponse> refresh(
 			@Valid @RequestBody RefreshRequest request

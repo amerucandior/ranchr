@@ -39,6 +39,7 @@ public class Kyc {
 	@Column(nullable = false, updatable = false)
 	private LocalDateTime createdAt;
 
+	@Builder.Default
 	private boolean verified = false;
 
 	private LocalDateTime verifiedAt;

@@ -13,7 +13,7 @@ public record ConnectionRequestResponseDto(
 ) {
 	public static ConnectionRequestResponseDto from(ConnectionRequest r) {
 		return new ConnectionRequestResponseDto(
-				r.getId(), r.getListing().getId(), r.getInterestedUser().getId(),
+				r.getId(), r.getListing().getId(), r.getInterestedUser().getUserId(),
 				r.getStatus(), r.getMessage(), r.getCreatedAt());
 	}
 }

@@ -83,11 +83,7 @@ public class ListingService {
 	                                    ListingServiceType serviceType, ListingStatus status,
 	                                    Pageable pageable) {
 		if (!currentUser.isAuthenticated()) {
-			if (pageable.getSort().isUnsorted()) {
-				pageable = PageRequest.of(0, pageable.getPageSize(), Sort.by("createdAt").descending());
-			} else {
-				pageable = PageRequest.of(0, pageable.getPageSize(), pageable.getSort());
-			}
+			pageable = PageRequest.of(0, pageable.getPageSize(), Sort.by("createdAt").descending());
 		}
 
 		Specification<Listing> spec = (root, query, cb) ->
