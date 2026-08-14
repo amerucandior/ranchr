@@ -38,7 +38,10 @@ public class ServiceRequest {
     @JoinColumn(name = "user_id", nullable = false)
     private User farmer;
 
+    private String animalPhotos;
+    private String animalSpecies;
     private String symptoms;
+    private String location;
 
     @JdbcTypeCode(SqlTypes.LONGVARCHAR)
     private String description;

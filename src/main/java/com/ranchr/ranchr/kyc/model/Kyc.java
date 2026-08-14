@@ -2,8 +2,10 @@ package com.ranchr.ranchr.kyc.model;
 
 import com.ranchr.authentication.model.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
@@ -14,6 +16,8 @@ import java.util.UUID;
 @Table(name = "kyc")
 @Builder
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Kyc {
 
 	@Id

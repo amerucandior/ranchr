@@ -21,7 +21,7 @@ public record CreateListingRequest(
 		String description,
 		@NotBlank String location,
 		@NotNull ListingServiceType serviceType,
-		@NotNull @DecimalMin(value = "0.0", inclusive = true) BigDecimal fee,
+		@NotNull @DecimalMin(value = "0.0") BigDecimal fee,
 		LocalDate availableFrom,
 		LocalDate availableTo
 ) {

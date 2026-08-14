@@ -5,6 +5,9 @@ import com.ranchr.ranchr.vet.model.enums.Available;
 import com.ranchr.ranchr.vet.model.enums.ServicesOffered;
 import com.ranchr.ranchr.vet.model.enums.VerificationStatus;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -39,6 +42,9 @@ public class VetProfile {
     @Column(name = "kvb_registered_name", nullable = false)
     private String kvbRegisteredName;
 
+    @NotNull
+    @Min(0)
+    @Max(60)
     @Column(name = "years_experience", nullable = false)
     private Integer yearsExperience;
 

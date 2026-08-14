@@ -29,7 +29,7 @@ public record UpdateListingRequest(
 		@NotBlank String location,
 		@NotNull ListingServiceType serviceType,
 		ListingStatus status,
-		@NotNull @DecimalMin(value = "0.0", inclusive = true) BigDecimal fee,
+		@NotNull @DecimalMin(value = "0.0") BigDecimal fee,
 		LocalDate availableFrom,
 		LocalDate availableTo
 ) {
