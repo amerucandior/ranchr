@@ -27,6 +27,9 @@ public interface ConnectionRequestRepository extends JpaRepository<ConnectionReq
 	Optional<ConnectionRequest> findTopByListingAndInterestedUserAndStatusOrderByCreatedAtDesc(
 			Listing listing, User interestedUser, ConnectionStatus status);
 
+	Optional<ConnectionRequest> findTopByListing_OwnerAndStatusOrderByCreatedAtDesc(
+			User owner, ConnectionStatus status);
+
 	@Modifying
 	@Query("UPDATE Listing l SET l.interestCount = l.interestCount + 1 WHERE l.id = :id")
 	void incrementInterestCount(@Param("id") UUID id);

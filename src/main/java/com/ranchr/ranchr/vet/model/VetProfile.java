@@ -73,6 +73,11 @@ public class VetProfile {
 
     private LocalDateTime verifiedAt;
 
+    @Column(name = "verified", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private VerificationStatus verified = VerificationStatus.UNDER_REVIEW;
+
     @Column(name = "verified_by")
     private String verifiedBy;
 

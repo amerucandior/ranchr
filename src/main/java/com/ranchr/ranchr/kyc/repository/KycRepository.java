@@ -10,6 +10,7 @@ import java.util.UUID;
 public interface KycRepository extends JpaRepository<Kyc, UUID> {
 
 	Optional<Kyc> findByPhoneNumber(String phoneNumber);
+	Optional<Kyc> findByPhoneNumberEndingWith(String suffix);
 	Optional<Kyc> findByNationalId(String nationalId);
 	Boolean existsByPhoneNumber(String phoneNumber);
 	Boolean existsByNationalId(String nationalId);

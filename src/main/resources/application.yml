@@ -1,0 +1,81 @@
+spring:
+  application:
+    name: ranchr
+
+  # Database Configuration (PostgreSQL matching compose.yaml)
+  datasource:
+    url: jdbc:h2:file:./data/sampledb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+
+
+  # Mail Configuration (Spring Mail for EmailService)
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: your-email@gmail.com
+    password: your-app-password
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  # Redis Configuration (matching compose.yaml)
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+  # RabbitMQ Configuration (matching compose.yaml)
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: myuser
+    password: secret
+
+# Security & JWT Configuration
+security:
+  jwt:
+    secret-key: your-base64-or-strong-secret-key-at-least-256-bits-long
+    access-token-expiry: 900000     # 15 minutes in milliseconds
+    refresh-token-expiry: 604800000 # 7 days in milliseconds
+
+# Third-Party Integrations
+app:
+  cloudinary:
+    cloud-name: your-cloudinary-cloud-name
+    api-key: your-cloudinary-api-key
+    api-secret: your-cloudinary-api-secret
+    api-base-url: https://api.cloudinary.com
+
+africastalking:
+  username: your-africastalking-username
+  api-key: your-africastalking-api-key
+  sender-id: your-africastalking-sender-id
+
+# Actuator & Management
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+info:
+  app:
+    name: Ranchr
+    version: 0.0.1
+    description: Ranchr API

@@ -1,6 +1,6 @@
 package com.ranchr.ranchr.vet.dto;
 
-public record Location(
+public record LocationRequest(
         String name, double latitude, double longitude
 ) {
 }
