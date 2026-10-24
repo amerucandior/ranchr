@@ -1,0 +1,10 @@
+.git
+.idea
+target
+data
+*.db
+*.mv.db
+*.trace.db
+*.log
+cv.tex
+.mvn
