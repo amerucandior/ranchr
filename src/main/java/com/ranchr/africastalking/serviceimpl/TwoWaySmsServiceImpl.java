@@ -36,6 +36,7 @@ public class TwoWaySmsServiceImpl implements TwoWaySmsService {
     private final ServiceRequestService serviceRequestService;
     private final ConnectionRequestService connectionRequestService;
     private final SmsService smsService;
+    private final com.ranchr.ranchr.reproduction.repository.ReproductiveCycleRepository reproductiveCycleRepository;
 
     @Override
     @Transactional
@@ -149,7 +150,21 @@ public class TwoWaySmsServiceImpl implements TwoWaySmsService {
             }
         }
 
-        return "Ranchr: No pending service or connection request found to accept.";
+        // 3. Check if user is a Farmer responding to a Day 21 Non-Return check (Heat Returned)
+        Optional<com.ranchr.ranchr.reproduction.model.ReproductiveCycle> cycleOpt = reproductiveCycleRepository
+                .findTopByFarmerAndStatusOrderByCreatedAtDesc(user, com.ranchr.ranchr.reproduction.model.enums.ReproductiveStatus.INSEMINATED);
+
+        if (cycleOpt.isPresent() && cycleOpt.get().isDay21AlertSent()) {
+            com.ranchr.ranchr.reproduction.model.ReproductiveCycle cycle = cycleOpt.get();
+            cycle.setStatus(com.ranchr.ranchr.reproduction.model.enums.ReproductiveStatus.HEAT_RETURNED);
+            reproductiveCycleRepository.save(cycle);
+            return String.format(
+                    "Ranchr: Recorded return to heat for %s. A repeat AI request has been flagged on your dashboard.",
+                    cycle.getAnimalIdentifier()
+            );
+        }
+
+        return "Ranchr: No pending service, connection request, or Day 21 alert found to accept.";
     }
 
     private String handleStart(User user) {
@@ -234,6 +249,20 @@ public class TwoWaySmsServiceImpl implements TwoWaySmsService {
             } catch (Exception ex) {
                 return "Ranchr: Error declining request: " + ex.getMessage();
             }
+        }
+
+        // Check if user is a Farmer confirming no-return to heat (Day 21 milestone)
+        Optional<com.ranchr.ranchr.reproduction.model.ReproductiveCycle> cycleOpt = reproductiveCycleRepository
+                .findTopByFarmerAndStatusOrderByCreatedAtDesc(user, com.ranchr.ranchr.reproduction.model.enums.ReproductiveStatus.INSEMINATED);
+
+        if (cycleOpt.isPresent() && cycleOpt.get().isDay21AlertSent()) {
+            com.ranchr.ranchr.reproduction.model.ReproductiveCycle cycle = cycleOpt.get();
+            cycle.setStatus(com.ranchr.ranchr.reproduction.model.enums.ReproductiveStatus.CONFIRMED_PREGNANT);
+            reproductiveCycleRepository.save(cycle);
+            return String.format(
+                    "Ranchr: Recorded NO return to heat for %s! Presumed pregnant. Day 60 diagnosis reminder scheduled.",
+                    cycle.getAnimalIdentifier()
+            );
         }
 
         return "Ranchr: No pending request found to decline.";

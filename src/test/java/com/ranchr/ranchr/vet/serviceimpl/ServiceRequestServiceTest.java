@@ -55,6 +55,9 @@ class ServiceRequestServiceTest {
     @Mock
     private SimpMessagingTemplate messagingTemplate;
 
+    @Mock
+    private org.springframework.context.ApplicationEventPublisher eventPublisher;
+
     @InjectMocks
     private ServiceRequestServiceImpl serviceRequestService;
 

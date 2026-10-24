@@ -45,6 +45,7 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
     private final VetRatingRepository vetRatingRepository;
     private final SmsService smsService;
     private final SimpMessagingTemplate messagingTemplate;
+    private final org.springframework.context.ApplicationEventPublisher eventPublisher;
 
     @Override
     @Transactional
@@ -245,6 +246,12 @@ public class ServiceRequestServiceImpl implements ServiceRequestService {
         vetProfileRepository.save(vetProfile);
 
         ServiceRequest saved = serviceRequestRepository.save(request);
+
+        // Publish service completed event (triggers automated reproductive cycle tracking if AI)
+        eventPublisher.publishEvent(new com.ranchr.ranchr.vet.dto.VetEvents.ServiceCompletedEvent(
+                saved.getServiceId(),
+                dto != null ? dto.semenStrawBatchNumber() : null
+        ));
 
         // Notify farmer to rate the vet
         User farmer = request.getFarmer();

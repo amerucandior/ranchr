@@ -28,6 +28,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
@@ -55,6 +56,9 @@ class TwoWaySmsServiceTest {
 
     @Mock
     private SmsService smsService;
+
+    @Mock
+    private com.ranchr.ranchr.reproduction.repository.ReproductiveCycleRepository reproductiveCycleRepository;
 
     @InjectMocks
     private TwoWaySmsServiceImpl twoWaySmsService;
@@ -147,5 +151,34 @@ class TwoWaySmsServiceTest {
 
         assertTrue(reply.contains("Ranchr SMS: Reply 1 or ACCEPT"));
         verify(smsService, times(1)).send(eq("+254711223344"), contains("Ranchr SMS"));
+    }
+
+    @Test
+    void testProcessInboundSms_FarmerConfirmsNoHeatOnDay21() {
+        User farmerUser = User.builder().userId(UUID.randomUUID()).username("farmer_dan").build();
+        Kyc farmerKyc = Kyc.builder().user(farmerUser).phoneNumber("+254799887766").build();
+
+        when(kycRepository.findByPhoneNumberEndingWith(eq("799887766"))).thenReturn(Optional.of(farmerKyc));
+        when(connectionRequestRepository.findTopByListing_OwnerAndStatusOrderByCreatedAtDesc(farmerUser, ConnectionStatus.PENDING))
+                .thenReturn(Optional.empty());
+
+        com.ranchr.ranchr.reproduction.model.ReproductiveCycle cycle = com.ranchr.ranchr.reproduction.model.ReproductiveCycle.builder()
+                .farmer(farmerUser)
+                .animalIdentifier("Cow #55")
+                .status(com.ranchr.ranchr.reproduction.model.enums.ReproductiveStatus.INSEMINATED)
+                .day21AlertSent(true)
+                .build();
+
+        when(reproductiveCycleRepository.findTopByFarmerAndStatusOrderByCreatedAtDesc(
+                farmerUser, com.ranchr.ranchr.reproduction.model.enums.ReproductiveStatus.INSEMINATED))
+                .thenReturn(Optional.of(cycle));
+
+        InboundSmsDto sms = new InboundSmsDto("+254799887766", "20880", "2", null, "id001", null);
+        String reply = twoWaySmsService.processInboundSms(sms);
+
+        assertTrue(reply.contains("Recorded NO return to heat"));
+        assertEquals(com.ranchr.ranchr.reproduction.model.enums.ReproductiveStatus.CONFIRMED_PREGNANT, cycle.getStatus());
+        verify(reproductiveCycleRepository, times(1)).save(cycle);
+        verify(smsService, times(1)).send(eq("+254799887766"), contains("Recorded NO return to heat"));
     }
 }
