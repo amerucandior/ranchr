@@ -29,7 +29,7 @@ public class SmsWebhookController {
     @Operation(summary = "Receive inbound SMS from Africa's Talking (Form Encoded)")
     public ResponseEntity<String> handleFormInboundSms(
             @RequestParam("from") String from,
-            @RequestParam("to") String to,
+            @RequestParam(value = "to", required = false) String to,
             @RequestParam("text") String text,
             @RequestParam(value = "date", required = false) String date,
             @RequestParam(value = "id", required = false) String id,

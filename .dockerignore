@@ -1,6 +1,7 @@
 .git
 .idea
-target
+target/*
+!target/*.jar
 data
 *.db
 *.mv.db

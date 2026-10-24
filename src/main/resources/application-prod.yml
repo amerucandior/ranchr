@@ -16,4 +16,11 @@ spring:
 management:
   endpoint:
     health:
-      show-details: never
+      show-details: when-authorized
+      probes:
+        enabled: true
+  health:
+    mail:
+      enabled: false
+    ldap:
+      enabled: false
