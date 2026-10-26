@@ -1,0 +1,23 @@
+{
+  "/api": {
+    "target": "http://localhost:8080",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/vet": {
+    "target": "http://localhost:8080",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/auth": {
+    "target": "http://localhost:8080",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/ws": {
+    "target": "http://localhost:8080",
+    "secure": false,
+    "ws": true,
+    "changeOrigin": true
+  }
+}

@@ -1,0 +1,151 @@
+<div class="tracker-container">
+  <div class="back-nav">
+    <a routerLink="/dispatch" class="back-link">&larr; Back to Heat Dispatch</a>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Connecting to live dispatch stream...</p>
+    </div>
+  } @else if (errorMessage()) {
+    <div class="error-card">
+      <p>{{ errorMessage() }}</p>
+      <button (click)="loadRequestDetails()" class="retry-btn">Retry</button>
+    </div>
+  } @else if (request(); as req) {
+    <!-- Main Tracking Card -->
+    <div class="tracker-card">
+      <div class="card-header">
+        <div>
+          <span class="species-badge">{{ req.animalSpecies }}</span>
+          <h2>Dispatch #{{ req.serviceId.substring(0, 8) }}</h2>
+        </div>
+        <span class="status-badge" [attr.data-status]="req.status">{{ req.status }}</span>
+      </div>
+
+      <!-- 4-Stage Progress Stepper -->
+      <div class="stepper">
+        @for (step of steps; track step.status; let i = $index) {
+          <div
+            class="step-item"
+            [class.completed]="isStepCompleted(step.status)"
+            [class.active]="isStepActive(step.status)">
+            <div class="step-circle">
+              @if (isStepCompleted(step.status) && !isStepActive(step.status)) {
+                <span>&#10003;</span>
+              } @else {
+                <span>{{ i + 1 }}</span>
+              }
+            </div>
+            <div class="step-info">
+              <span class="step-title">{{ step.label }}</span>
+              <span class="step-desc">{{ step.desc }}</span>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Assigned Veterinary Officer Profile & Direct Call -->
+      <div class="officer-box">
+        <h3>Assigned KVB Practitioner</h3>
+        @if (req.vetName) {
+          <div class="officer-card">
+            <div class="officer-avatar">&#128104;&#8205;&#9877;&#65039;</div>
+            <div class="officer-meta">
+              <span class="officer-name">{{ req.vetName }}</span>
+              <span class="badge-kvb">&#128737; Kenya Veterinary Board Verified</span>
+              @if (req.vetPhone) {
+                <span class="officer-phone">Phone: {{ req.vetPhone }}</span>
+              }
+            </div>
+            @if (req.vetPhone) {
+              <a [href]="'tel:' + req.vetPhone" class="btn-call">
+                📞 Call Vet
+              </a>
+            }
+          </div>
+        } @else {
+          <div class="unassigned-notice">
+            <span class="pulse-dot"></span>
+            <span>Searching nearest certified officers within 15km radius...</span>
+          </div>
+        }
+      </div>
+
+      <!-- Farm & Symptoms Details -->
+      <div class="details-box">
+        <h3>Service Details</h3>
+        <div class="details-grid">
+          <div>
+            <span class="label">Farm Coordinates:</span>
+            <span class="val">{{ req.location }}</span>
+          </div>
+          <div>
+            <span class="label">Symptoms Observed:</span>
+            <span class="val">{{ req.symptoms }}</span>
+          </div>
+          <div>
+            <span class="label">Requested At:</span>
+            <span class="val">{{ req.createdAt | date:'medium' }}</span>
+          </div>
+          @if (req.acceptedAt) {
+            <div>
+              <span class="label">Accepted At:</span>
+              <span class="val">{{ req.acceptedAt | date:'medium' }}</span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Rating & Feedback Loop (When Completed) -->
+      @if (req.status === 'COMPLETED') {
+        <div class="rating-box">
+          <h3>Service Feedback & Rating</h3>
+          @if (ratingSubmitted()) {
+            <div class="rating-success">
+              <p>&#10003; Thank you! Your rating helps maintain KVB veterinary service quality.</p>
+            </div>
+          } @else {
+            <p>How was the artificial insemination / clinical visit with {{ req.vetName }}?</p>
+            <div class="star-rating">
+              @for (s of [1, 2, 3, 4, 5]; track s) {
+                <button
+                  type="button"
+                  class="star-btn"
+                  [class.active]="s <= ratingStars"
+                  (click)="ratingStars = s">
+                  ★
+                </button>
+              }
+              <span class="star-score">({{ ratingStars }} of 5 Stars)</span>
+            </div>
+
+            <textarea
+              class="form-control"
+              rows="2"
+              [(ngModel)]="ratingReview"
+              placeholder="Add optional notes on puncture technique, cold-chain handling, or punctuality..."></textarea>
+
+            <button
+              type="button"
+              class="btn-submit-rating"
+              [disabled]="isSubmittingRating()"
+              (click)="submitRating()">
+              {{ isSubmittingRating() ? 'Submitting...' : 'Submit Rating' }}
+            </button>
+          }
+        </div>
+      }
+
+      <!-- Cancel Action -->
+      @if (req.status === 'PENDING' || req.status === 'ACCEPTED') {
+        <div class="cancel-bar">
+          <button type="button" class="btn-cancel-request" (click)="cancelRequest()">
+            Cancel Service Request
+          </button>
+        </div>
+      }
+    </div>
+  }
+</div>

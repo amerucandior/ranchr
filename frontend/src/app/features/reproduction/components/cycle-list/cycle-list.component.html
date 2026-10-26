@@ -1,0 +1,229 @@
+<div class="cycles-container">
+  <!-- Header -->
+  <header class="repro-header">
+    <div>
+      <h2>21-Day Reproductive Lifecycle Calendar</h2>
+      <p class="subtitle">
+        Automated tracking of estrus non-return, 60-day veterinary pregnancy diagnosis, and 280-day gestation to birth.
+      </p>
+    </div>
+    <div class="header-actions">
+      <button type="button" class="btn-scheduler" (click)="triggerSchedulerNow()">
+        &#9881; Test Daily Alert Cron
+      </button>
+      <button type="button" class="btn-new-cycle" (click)="openCreateModal()">
+        + Log Insemination Event
+      </button>
+    </div>
+  </header>
+
+  <!-- Loading State -->
+  @if (isLoading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Loading reproductive tracking records...</p>
+    </div>
+  } @else if (cycles().length === 0) {
+    <div class="empty-state">
+      <h3>No Tracked Animals Yet</h3>
+      <p>When veterinary artificial insemination is completed through the dispatch engine, reproductive milestones are automatically scheduled here.</p>
+      <button type="button" class="btn-new-cycle" (click)="openCreateModal()">
+        + Register Breeding Event Manually
+      </button>
+    </div>
+  } @else {
+    <!-- Cycles Grid -->
+    <div class="cycles-grid">
+      @for (cycle of cycles(); track cycle.id) {
+        <div class="cycle-card" [attr.data-status]="cycle.status">
+          <div class="card-head">
+            <div class="animal-meta">
+              <span class="tag-badge">&#127991; {{ cycle.animalIdentifier }}</span>
+              <span class="species-text">({{ cycle.animalSpecies }})</span>
+            </div>
+            <span class="status-pill" [attr.data-status]="cycle.status">{{ cycle.status }}</span>
+          </div>
+
+          <div class="straw-line">
+            <span>Semen Batch: <strong>{{ cycle.semenStrawBatchNumber || 'Natural Service' }}</strong></span>
+            <span class="insem-date">Mated: {{ cycle.inseminationDate | date:'mediumDate' }}</span>
+          </div>
+
+          <!-- The 3 Milestones Pipeline -->
+          <div class="milestones-track">
+            
+            <!-- Milestone 1: Day 21 Non-Return Check -->
+            <div
+              class="milestone-box"
+              [class.highlight]="cycle.status === 'INSEMINATED'"
+              [class.passed]="cycle.status === 'PREGNANCY_CONFIRMED' || cycle.status === 'CALVED'">
+              <div class="milestone-title">
+                <span class="step-num">1</span>
+                <span>Day 21 Non-Return</span>
+              </div>
+              <div class="milestone-date">{{ cycle.nonReturnCheckDate | date:'mediumDate' }}</div>
+              <div class="countdown-badge">
+                @if (cycle.status === 'INSEMINATED') {
+                  @if (cycle.daysUntilNonReturn > 0) {
+                    <span>{{ cycle.daysUntilNonReturn }} days until estrus check</span>
+                  } @else {
+                    <span class="urgent-text">Estrus check due now!</span>
+                  }
+                } @else if (cycle.status === 'HEAT_RETURNED') {
+                  <span class="text-failed">Heat returned</span>
+                } @else {
+                  <span class="text-passed">Conception passed</span>
+                }
+              </div>
+
+              @if (cycle.status === 'INSEMINATED') {
+                <div class="milestone-actions">
+                  <button
+                    type="button"
+                    class="btn-action heat-btn"
+                    [disabled]="actionInProgressId() === cycle.id"
+                    (click)="recordHeatReturned(cycle)">
+                    &#9888; Heat Returned (Failed)
+                  </button>
+                </div>
+              }
+            </div>
+
+            <!-- Milestone 2: Day 60 Pregnancy Diagnosis -->
+            <div
+              class="milestone-box"
+              [class.highlight]="cycle.status === 'INSEMINATED' && cycle.daysUntilNonReturn <= 0"
+              [class.passed]="cycle.status === 'PREGNANCY_CONFIRMED' || cycle.status === 'CALVED'">
+              <div class="milestone-title">
+                <span class="step-num">2</span>
+                <span>Day 60 Pregnancy Check</span>
+              </div>
+              <div class="milestone-date">{{ cycle.pregnancyDiagnosisDate | date:'mediumDate' }}</div>
+              <div class="countdown-badge">
+                @if (cycle.status === 'INSEMINATED') {
+                  <span>{{ cycle.daysUntilPregnancyDiagnosis }} days until PD</span>
+                } @else if (cycle.status === 'PREGNANCY_CONFIRMED' || cycle.status === 'CALVED') {
+                  <span class="text-passed">&#10003; Pregnant Confirmed</span>
+                } @else {
+                  <span>N/A</span>
+                }
+              </div>
+
+              @if (cycle.status === 'INSEMINATED') {
+                <div class="milestone-actions">
+                  <button
+                    type="button"
+                    class="btn-action confirm-btn"
+                    [disabled]="actionInProgressId() === cycle.id"
+                    (click)="confirmPregnancy(cycle)">
+                    &#10003; Confirm Gestation
+                  </button>
+                </div>
+              }
+            </div>
+
+            <!-- Milestone 3: Day 280 Calving Tracker -->
+            <div
+              class="milestone-box"
+              [class.highlight]="cycle.status === 'PREGNANCY_CONFIRMED'"
+              [class.passed]="cycle.status === 'CALVED'">
+              <div class="milestone-title">
+                <span class="step-num">3</span>
+                <span>Day 280 Calving Due</span>
+              </div>
+              <div class="milestone-date">{{ cycle.expectedCalvingDate | date:'mediumDate' }}</div>
+              <div class="countdown-badge">
+                @if (cycle.status === 'PREGNANCY_CONFIRMED') {
+                  <span>{{ cycle.daysUntilCalving }} days to calving</span>
+                } @else if (cycle.status === 'CALVED') {
+                  <span class="text-passed">&#10003; Calved Successfully</span>
+                } @else {
+                  <span>Awaiting PD</span>
+                }
+              </div>
+
+              @if (cycle.status === 'PREGNANCY_CONFIRMED') {
+                <div class="milestone-actions">
+                  <button
+                    type="button"
+                    class="btn-action calve-btn"
+                    [disabled]="actionInProgressId() === cycle.id"
+                    (click)="recordCalved(cycle)">
+                    &#129303; Record Calving
+                  </button>
+                </div>
+              }
+            </div>
+
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Modal for Manual Insemination Event Registration -->
+  @if (showCreateModal()) {
+    <div class="modal-backdrop">
+      <div class="modal-card">
+        <h3>Log Livestock Breeding Event</h3>
+        <form [formGroup]="cycleForm" (ngSubmit)="submitNewCycle()">
+          
+          <div class="form-group">
+            <label>Animal Tag / Name</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="animalIdentifier"
+              placeholder="e.g., Cow #KE-042 (Daisy)" />
+          </div>
+
+          <div class="form-group">
+            <label>Livestock Species</label>
+            <select class="form-control" formControlName="animalSpecies">
+              <option value="Cattle">Cattle / Cow</option>
+              <option value="Goat">Dairy Goat</option>
+              <option value="Sheep">Sheep</option>
+              <option value="Pig">Pig / Sow</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Semen Straw Batch # (Optional)</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="semenStrawBatchNumber"
+              placeholder="e.g., KAGRC-AYR-2026-908" />
+          </div>
+
+          <div class="form-group">
+            <label>Insemination / Mating Date</label>
+            <input
+              type="date"
+              class="form-control"
+              formControlName="inseminationDate" />
+          </div>
+
+          <div class="form-group">
+            <label>Notes</label>
+            <textarea
+              class="form-control"
+              rows="2"
+              formControlName="notes"
+              placeholder="Breeding notes..."></textarea>
+          </div>
+
+          <div class="modal-buttons">
+            <button type="button" class="btn-cancel" (click)="closeCreateModal()">Cancel</button>
+            <button
+              type="submit"
+              class="btn-confirm"
+              [disabled]="isCreating() || cycleForm.invalid">
+              {{ isCreating() ? 'Scheduling Milestones...' : 'Start 21-Day Lifecycle Tracking' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+</div>

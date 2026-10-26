@@ -1,0 +1,172 @@
+<div class="dispatch-container">
+  <!-- 12-Hour Biological Estrus Window Header -->
+  <header class="heat-clock-card">
+    <div class="clock-badge">
+      <span class="pulse-indicator"></span>
+      BIOLOGICAL URGENCY WINDOW
+    </div>
+    <h2>12-Hour Heat Conception Window</h2>
+    <p class="subtitle">
+      Estrus in cattle lasts only 12 to 24 hours. Optimal conception occurs 10 to 14 hours after standing heat onset.
+    </p>
+
+    <div class="countdown-display">
+      <div class="time-block">
+        <span class="time-number">{{ hoursRemaining() | number:'2.0-0' }}</span>
+        <span class="time-label">HOURS</span>
+      </div>
+      <span class="time-sep">:</span>
+      <div class="time-block">
+        <span class="time-number">{{ minutesRemaining() | number:'2.0-0' }}</span>
+        <span class="time-label">MINUTES</span>
+      </div>
+      <span class="time-sep">:</span>
+      <div class="time-block">
+        <span class="time-number">{{ secondsRemaining() | number:'2.0-0' }}</span>
+        <span class="time-label">SECONDS</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Notification banners -->
+  @if (successMessage()) {
+    <div class="alert alert-success">
+      <span class="icon">&#10003;</span>
+      <span>{{ successMessage() }}</span>
+    </div>
+  }
+
+  @if (errorMessage()) {
+    <div class="alert alert-danger">
+      <span class="icon">&#9888;</span>
+      <span>{{ errorMessage() }}</span>
+    </div>
+  }
+
+  <!-- Dispatch Request Form -->
+  <section class="form-card">
+    <h3>Fast-Track Veterinary Dispatch</h3>
+    <form [formGroup]="dispatchForm" (ngSubmit)="submitDispatch()">
+      
+      <!-- Urgency Toggle -->
+      <div class="mode-toggle">
+        <label class="toggle-option" [class.active]="dispatchForm.get('isHeatAlert')?.value === true">
+          <input type="radio" formControlName="isHeatAlert" [value]="true" (change)="toggleBroadcast(true)" />
+          <span class="toggle-title">Emergency Heat Alert (AI Straw)</span>
+          <span class="toggle-desc">Instant broadcast via SMS & push to all available KVB practitioners</span>
+        </label>
+        <label class="toggle-option" [class.active]="dispatchForm.get('isHeatAlert')?.value === false">
+          <input type="radio" formControlName="isHeatAlert" [value]="false" />
+          <span class="toggle-title">Routine / Health Check</span>
+          <span class="toggle-desc">Standard veterinary inspection or clinical consultation</span>
+        </label>
+      </div>
+
+      <!-- Animal Species Selector -->
+      <div class="form-group">
+        <label class="form-label">Livestock Species</label>
+        <div class="chip-group">
+          @for (species of ['Cow / Heifer', 'Dairy Goat', 'Sheep', 'Sow']; track species) {
+            <button
+              type="button"
+              class="chip-button"
+              [class.selected]="dispatchForm.get('animalSpecies')?.value === species"
+              (click)="selectSpecies(species)">
+              {{ species }}
+            </button>
+          }
+        </div>
+      </div>
+
+      <!-- Symptoms / Heat Signs Observed -->
+      <div class="form-group">
+        <label class="form-label" for="symptoms">Observed Symptoms / Heat Signs</label>
+        <textarea
+          id="symptoms"
+          class="form-control"
+          rows="2"
+          formControlName="symptoms"
+          placeholder="e.g., Standing heat, clear discharge, mounting other cows..."></textarea>
+      </div>
+
+      <!-- Farm Location -->
+      <div class="form-group">
+        <label class="form-label" for="location">Farm Location & Landmark</label>
+        <input
+          id="location"
+          type="text"
+          class="form-control"
+          formControlName="location"
+          placeholder="e.g., Nyeri, Othaya Road, near Gitunduti Milk Center" />
+        <small class="form-hint">Provides immediate GPS and road directions for the visiting officer.</small>
+      </div>
+
+      <!-- Preferred Vet (Optional) -->
+      @if (dispatchForm.get('isHeatAlert')?.value === false) {
+        <div class="form-group">
+          <label class="form-label" for="vetSelect">Assign Specific Certified Vet (Optional)</label>
+          <select id="vetSelect" class="form-control" formControlName="targetVetId">
+            <option value="">Broadcast to any online KVB verified practitioner</option>
+            @for (vet of availableVets(); track vet.vetId) {
+              <option [value]="vet.vetId">{{ vet.kvbRegisteredName }} (Rating: {{ vet.rating || 5.0 }}★)</option>
+            }
+          </select>
+        </div>
+      }
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        class="submit-button"
+        [class.urgent]="dispatchForm.get('isHeatAlert')?.value === true"
+        [disabled]="isSubmitting()">
+        @if (isSubmitting()) {
+          <span>Broadcasting Alert...</span>
+        } @else {
+          <span>{{ dispatchForm.get('isHeatAlert')?.value ? '⚡ Dispatch Inseminator Now' : 'Request Vet Service' }}</span>
+        }
+      </button>
+    </form>
+  </section>
+
+  <!-- Active Requests Feed -->
+  <section class="requests-section">
+    <h3>Active Dispatch Requests</h3>
+    @if (activeRequests().length === 0) {
+      <div class="empty-state">
+        <p>No active service requests right now. Create an alert above when heat is detected.</p>
+      </div>
+    } @else {
+      <div class="requests-grid">
+        @for (req of activeRequests(); track req.serviceId) {
+          <div class="request-card" [class.urgent-border]="req.status === 'PENDING'">
+            <div class="card-header">
+              <span class="species-badge">{{ req.animalSpecies }}</span>
+              <span class="status-badge" [attr.data-status]="req.status">{{ req.status }}</span>
+            </div>
+
+            <p class="symptoms-text"><strong>Symptoms:</strong> {{ req.symptoms }}</p>
+            <p class="location-text">📍 {{ req.location }}</p>
+
+            @if (req.vetName) {
+              <div class="assigned-vet">
+                <span class="vet-badge">KVB Certified</span>
+                <span class="vet-name">{{ req.vetName }}</span>
+                @if (req.vetPhone) {
+                  <a [href]="'tel:' + req.vetPhone" class="call-link">📞 {{ req.vetPhone }}</a>
+                }
+              </div>
+            }
+
+            <div class="card-footer">
+              <small class="timestamp">{{ req.createdAt | date:'short' }}</small>
+              <a [routerLink]="['/tracker', req.serviceId]" class="track-link">
+                View Live Tracker &rarr;
+              </a>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </section>
+</div>

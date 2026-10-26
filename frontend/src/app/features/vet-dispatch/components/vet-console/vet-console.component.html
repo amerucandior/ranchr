@@ -1,0 +1,189 @@
+<div class="vet-console-container">
+  <!-- Top Bar: Availability Status -->
+  <header class="console-header">
+    <div class="officer-info">
+      <span class="shield-badge">&#128737; KVB Registered Practitioner</span>
+      <h2>Veterinary Mobility Console</h2>
+    </div>
+
+    <!-- One-Tap Availability Toggle -->
+    <div class="availability-bar">
+      <span class="bar-label">Current Dispatch Status:</span>
+      <div class="status-buttons">
+        <button
+          type="button"
+          class="status-btn available"
+          [class.active]="availabilityStatus() === 'AVAILABLE'"
+          (click)="setAvailability('AVAILABLE')">
+          <span class="status-dot"></span> AVAILABLE (ONLINE)
+        </button>
+        <button
+          type="button"
+          class="status-btn busy"
+          [class.active]="availabilityStatus() === 'BUSY'"
+          (click)="setAvailability('BUSY')">
+          <span class="status-dot"></span> ENGAGED / ON ROUTE
+        </button>
+        <button
+          type="button"
+          class="status-btn offline"
+          [class.active]="availabilityStatus() === 'UNAVAILABLE'"
+          (click)="setAvailability('UNAVAILABLE')">
+          <span class="status-dot"></span> OFFLINE
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Incoming Broadcast Alerts Feed -->
+  <section class="broadcasts-section">
+    <div class="section-header">
+      <div class="section-title">
+        <span class="ping-indicator"></span>
+        <h3>Urgent Heat Alerts (Broadcast Pool)</h3>
+      </div>
+      <button class="refresh-btn" (click)="refreshAll()">&#8635; Refresh</button>
+    </div>
+
+    @if (broadcasts().length === 0) {
+      <div class="empty-inbox">
+        <p>No unassigned broadcasts in your vicinity right now. You will be alerted via SMS and sound when an estrus emergency arrives.</p>
+      </div>
+    } @else {
+      <div class="broadcast-list">
+        @for (req of broadcasts(); track req.serviceId) {
+          <div class="broadcast-card">
+            <div class="card-top">
+              <span class="badge species">{{ req.animalSpecies }}</span>
+              <span class="badge time">{{ req.createdAt | date:'shortTime' }}</span>
+            </div>
+
+            <h4 class="farm-address">📍 {{ req.location }}</h4>
+            <p class="symptoms"><strong>Heat signs:</strong> {{ req.symptoms }}</p>
+
+            <div class="farmer-details">
+              <span>Farmer: <strong>{{ req.farmerUsername }}</strong></span>
+              @if (req.farmerPhone) {
+                <a [href]="'tel:' + req.farmerPhone" class="phone-link">📞 {{ req.farmerPhone }}</a>
+              }
+            </div>
+
+            <button
+              type="button"
+              class="accept-btn"
+              [disabled]="actionInProgressId() === req.serviceId"
+              (click)="acceptBroadcast(req)">
+              @if (actionInProgressId() === req.serviceId) {
+                <span>Accepting...</span>
+              } @else {
+                <span>⚡ ACCEPT DISPATCH</span>
+              }
+            </button>
+          </div>
+        }
+      </div>
+    }
+  </section>
+
+  <!-- Assigned Duties Queue -->
+  <section class="duties-section">
+    <h3>My Active Assignments</h3>
+
+    @if (activeDuties().length === 0) {
+      <div class="empty-duties">
+        <p>You have no active or in-progress service requests assigned.</p>
+      </div>
+    } @else {
+      <div class="duties-grid">
+        @for (duty of activeDuties(); track duty.serviceId) {
+          <div class="duty-card" [attr.data-status]="duty.status">
+            <div class="duty-header">
+              <span class="status-pill">{{ duty.status }}</span>
+              <span class="species-title">{{ duty.animalSpecies }}</span>
+            </div>
+
+            <div class="duty-body">
+              <p class="location-line"><strong>Farm:</strong> {{ duty.location }}</p>
+              <p class="symptoms-line"><strong>Symptoms:</strong> {{ duty.symptoms }}</p>
+
+              <div class="contact-box">
+                <span>Farmer: <strong>{{ duty.farmerUsername }}</strong></span>
+                @if (duty.farmerPhone) {
+                  <a [href]="'tel:' + duty.farmerPhone" class="duty-phone">📞 Call Farmer</a>
+                }
+              </div>
+            </div>
+
+            <!-- Action buttons depending on status -->
+            <div class="duty-actions">
+              @if (duty.status === 'ACCEPTED') {
+                <button
+                  type="button"
+                  class="action-btn start-btn"
+                  [disabled]="actionInProgressId() === duty.serviceId"
+                  (click)="startTrip(duty)">
+                  🏍️ Start Route / Arrive On Site
+                </button>
+              }
+
+              @if (duty.status === 'IN_PROGRESS') {
+                <button
+                  type="button"
+                  class="action-btn complete-btn"
+                  (click)="openCompleteModal(duty)">
+                  💉 Complete & Record Straw Batch
+                </button>
+              }
+
+              @if (duty.status === 'COMPLETED') {
+                <span class="completed-tag">&#10003; Service Completed & Recorded</span>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </section>
+
+  <!-- Modal for Insemination Completion & Semen Straw Batch Logging -->
+  @if (selectedDutyForCompletion()) {
+    <div class="modal-backdrop">
+      <div class="modal-card">
+        <h3>Record Completed Insemination</h3>
+        <p class="modal-subtitle">
+          Ensure KAGRC or licensed semen straw batch number is recorded for 21-day reproductive tracking.
+        </p>
+
+        <div class="form-group">
+          <label>Semen Straw Batch #</label>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="semenStrawBatchNumber"
+            placeholder="e.g., KAGRC-FRIESIAN-2026-908" />
+          <small>Required to activate the 21-day non-return and calving tracking calendar.</small>
+        </div>
+
+        <div class="form-group">
+          <label>Clinical Notes</label>
+          <textarea
+            class="form-control"
+            rows="3"
+            [(ngModel)]="completionNotes"
+            placeholder="Condition of animal, cervix dilation, semen viability..."></textarea>
+        </div>
+
+        <div class="modal-buttons">
+          <button type="button" class="btn-cancel" (click)="closeCompleteModal()">Cancel</button>
+          <button
+            type="button"
+            class="btn-confirm"
+            [disabled]="isLoading() || !semenStrawBatchNumber"
+            (click)="submitCompletion()">
+            {{ isLoading() ? 'Saving Record...' : 'Confirm & Complete Service' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>
