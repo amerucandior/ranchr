@@ -12,16 +12,66 @@ import { AuthService } from '../../../../core/services/auth.service';
   imports: [CommonModule, FormsModule, RouterLink],
   template: `
     <div class="marketplace-container">
-      <!-- Header Banner -->
+      <!-- High-Converting Hero Section -->
+      <section class="marketplace-hero">
+        <div class="hero-content">
+          <div class="hero-badge">
+            <span class="badge-dot"></span>
+            KENYA VETERINARY BOARD (KVB) ACCREDITED NETWORK
+          </div>
+          <h1 class="hero-title">
+            Bovine Genetics & Rapid Veterinary Dispatch Across Kenya
+          </h1>
+          <p class="hero-subtitle">
+            Source high-yield Friesian and Ayrshire semen straws, connect with licensed KVB practitioners, and dispatch emergency heat inseminations within the critical 12 to 18-hour estrus window.
+          </p>
+
+          <!-- Trust Pillars -->
+          <div class="trust-pills">
+            <div class="trust-pill">
+              <span class="pill-icon">🛡️</span>
+              <span>KVB Certified Vets</span>
+            </div>
+            <div class="trust-pill">
+              <span class="pill-icon">⚡</span>
+              <span>12h Estrus Response</span>
+            </div>
+            <div class="trust-pill">
+              <span class="pill-icon">🧬</span>
+              <span>Traceable Straw Batches</span>
+            </div>
+            <div class="trust-pill">
+              <span class="pill-icon">📱</span>
+              <span>Two-Way SMS Dispatch</span>
+            </div>
+          </div>
+
+          <!-- Hero Actions -->
+          <div class="hero-cta-group">
+            <a routerLink="/dispatch" class="btn-hero-primary">
+              ⚡ Request Heat Dispatch Now
+            </a>
+            <a routerLink="/marketplace/new" class="btn-hero-secondary">
+              + List Your Livestock
+            </a>
+          </div>
+
+          <!-- Offline SMS Paddock Callout -->
+          <div class="sms-callout">
+            <div class="sms-icon">📲</div>
+            <div class="sms-text">
+              <strong>In the Paddock with Low Connectivity?</strong>
+              <span>Text <code>START</code> to <strong>20880</strong> to dispatch the nearest veterinary officer immediately via Africa's Talking SMS.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section Header -->
       <div class="marketplace-header">
         <div>
-          <h2>Livestock Marketplace & Genetics</h2>
-          <p class="subtitle">Verified dairy and beef breeding stock, artificial insemination services, and farm listings.</p>
-        </div>
-        <div class="header-actions">
-          <a routerLink="/marketplace/new" class="btn-list-animal">
-            + List Your Livestock
-          </a>
+          <h2>Verified Livestock & Semen Straw Catalog</h2>
+          <p class="subtitle">Search certified breeding stock and artificial insemination services by breed, type, and county.</p>
         </div>
       </div>
 
@@ -113,7 +163,7 @@ import { AuthService } from '../../../../core/services/auth.service';
               <!-- Content -->
               <div class="card-body">
                 <div class="title-row">
-                  <h4 class="animal-title">{{ item.breed || item.animalType }}</h4>
+                  <h3 class="animal-title">{{ item.breed || item.animalType }}</h3>
                   <span class="gender-pill">{{ item.gender || 'LIVESTOCK' }}</span>
                 </div>
 
@@ -141,7 +191,7 @@ import { AuthService } from '../../../../core/services/auth.service';
                       ❤️ {{ item.interestCount }}
                     </button>
                     <a [routerLink]="['/connections']" [queryParams]="{ listingId: item.id }" class="btn-connect">
-                      Inquire
+                      Connect with Seller
                     </a>
                   </div>
                 </div>
@@ -158,6 +208,165 @@ import { AuthService } from '../../../../core/services/auth.service';
       margin: 1.5rem auto;
       padding: 0 1rem;
     }
+
+    /* Hero Banner */
+    .marketplace-hero {
+      background: linear-gradient(135deg, #064e3b 0%, #0f172a 100%);
+      color: #ffffff;
+      border-radius: 16px;
+      padding: 2.5rem 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 10px 25px -5px rgba(6, 78, 59, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #6ee7b7;
+      padding: 0.35rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      margin-bottom: 1.25rem;
+    }
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 8px #10b981;
+    }
+    .hero-title {
+      font-size: 2.25rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin: 0 0 1rem 0;
+      color: #ffffff;
+    }
+    .hero-subtitle {
+      font-size: 1.05rem;
+      color: #cbd5e1;
+      max-width: 780px;
+      line-height: 1.6;
+      margin: 0 0 1.5rem 0;
+    }
+
+    /* Trust Pills */
+    .trust-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 1.75rem;
+    }
+    .trust-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 0.4rem 0.85rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #e2e8f0;
+      backdrop-filter: blur(4px);
+    }
+
+    /* Hero CTA Group */
+    .hero-cta-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.75rem;
+    }
+    .btn-hero-primary {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.85rem 1.75rem;
+      background: #10b981;
+      color: #064e3b;
+      border-radius: 10px;
+      font-weight: 800;
+      font-size: 1rem;
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+      transition: all 0.2s ease;
+      &:hover {
+        background: #34d399;
+        transform: translateY(-2px);
+      }
+    }
+    .btn-hero-secondary {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.85rem 1.5rem;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #ffffff;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      &:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
+      }
+    }
+
+    /* SMS Callout */
+    .sms-callout {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      max-width: 720px;
+      .sms-icon {
+        font-size: 1.75rem;
+      }
+      .sms-text {
+        font-size: 0.85rem;
+        color: #e2e8f0;
+        line-height: 1.4;
+        strong {
+          color: #f1f5f9;
+          display: block;
+          margin-bottom: 0.2rem;
+        }
+        code {
+          background: #064e3b;
+          color: #a7f3d0;
+          padding: 0.15rem 0.4rem;
+          border-radius: 4px;
+          font-weight: 800;
+        }
+      }
+    }
+
+    @media (max-width: 640px) {
+      .marketplace-hero {
+        padding: 1.75rem 1.25rem;
+      }
+      .hero-title {
+        font-size: 1.65rem;
+      }
+      .hero-cta-group {
+        flex-direction: column;
+      }
+      .btn-hero-primary, .btn-hero-secondary {
+        justify-content: center;
+        width: 100%;
+      }
+    }
+
     .marketplace-header {
       display: flex;
       justify-content: space-between;
@@ -166,7 +375,7 @@ import { AuthService } from '../../../../core/services/auth.service';
       flex-wrap: wrap;
       gap: 1rem;
       h2 {
-        font-size: 1.75rem;
+        font-size: 1.5rem;
         color: #0f172a;
         margin: 0;
       }
@@ -176,21 +385,7 @@ import { AuthService } from '../../../../core/services/auth.service';
         margin: 0.25rem 0 0 0;
       }
     }
-    .btn-list-animal {
-      display: inline-flex;
-      align-items: center;
-      padding: 0.75rem 1.25rem;
-      background: #15803d;
-      color: #ffffff;
-      border-radius: 8px;
-      font-weight: 700;
-      text-decoration: none;
-      font-size: 0.9rem;
-      transition: background 0.2s;
-      &:hover {
-        background: #166534;
-      }
-    }
+
     .search-toolbar {
       background: #ffffff;
       border: 1px solid #e2e8f0;
@@ -249,6 +444,7 @@ import { AuthService } from '../../../../core/services/auth.service';
         }
       }
     }
+
     .loading-state, .empty-state {
       text-align: center;
       padding: 4rem 1rem;
@@ -287,6 +483,7 @@ import { AuthService } from '../../../../core/services/auth.service';
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
+
     .listings-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
