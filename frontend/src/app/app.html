@@ -1,52 +1,60 @@
 <div class="app-layout">
-  <!-- Top Navigation Header -->
+  <!-- Announcement Strip (Electric Lime) -->
+  <aside class="announcement-strip">
+    <span class="announcement-text">
+      KENYA VETERINARY BOARD ACCREDITED · 24/7 ESTRUS AI DISPATCH VIA TWO-WAY SMS 20880
+    </span>
+  </aside>
+
+  <!-- Global Header -->
   <header class="app-header">
     <div class="nav-container">
-      <div class="brand">
-        <a routerLink="/" class="brand-link">
-          <span class="brand-icon">&#128004;</span>
-          <span class="brand-name">Ranchr</span>
-        </a>
-        <span class="live-pill" [class.connected]="wsService.isConnected()">
-          <span class="dot"></span>
-          {{ wsService.isConnected() ? 'LIVE SYNC' : 'OFFLINE' }}
-        </span>
-      </div>
-
-      <!-- Navigation Links -->
-      <nav class="nav-links">
+      <!-- Left Audience Links -->
+      <nav class="nav-links-left">
         <a routerLink="/marketplace" routerLinkActive="active" class="nav-item">
-          🐄 Marketplace
+          Genetics Catalog
         </a>
         @if (authService.isAuthenticated()) {
           <a routerLink="/dispatch" routerLinkActive="active" class="nav-item">
-            ⚡ Heat Dispatch
+            Heat Dispatch
           </a>
           <a routerLink="/reproduction" routerLinkActive="active" class="nav-item">
-            📅 21-Day Calendar
-          </a>
-          <a routerLink="/kyc" routerLinkActive="active" class="nav-item">
-            🛡️ KYC & KVB
+            21-Day Calendar
           </a>
           <a routerLink="/connections" routerLinkActive="active" class="nav-item">
-            🤝 Inquiries
-          </a>
-          <a routerLink="/vet-console" routerLinkActive="active" class="nav-item vet-link">
-            🏍️ Vet Console
+            Inquiries
           </a>
         }
       </nav>
 
-      <!-- User actions -->
-      <div class="user-actions">
+      <!-- Centered Brand Axis -->
+      <div class="brand-centered">
+        <a routerLink="/" class="brand-link">
+          <span class="brand-name">Ranchr</span>
+        </a>
+      </div>
+
+      <!-- Right Utility Actions -->
+      <div class="nav-actions-right">
+        <span class="live-pill" [class.connected]="wsService.isConnected()">
+          <span class="dot"></span>
+          {{ wsService.isConnected() ? 'LIVE SYNC' : 'OFFLINE' }}
+        </span>
+
         @if (authService.isAuthenticated(); as user) {
+          @if (authService.isVet()) {
+            <a routerLink="/vet-console" routerLinkActive="active" class="btn-vet-console">
+              Vet Console
+            </a>
+          }
           <div class="user-pill">
             <span class="user-role">{{ authService.isVet() ? 'KVB VET' : 'BREEDER' }}</span>
             <span class="username">&#64;{{ authService.currentUser()?.username }}</span>
           </div>
           <button (click)="logout()" class="btn-logout" title="Sign out">Sign Out</button>
         } @else {
-          <a routerLink="/login" class="btn-login">Sign In</a>
+          <a routerLink="/login" class="nav-item-login">Sign In</a>
+          <a routerLink="/register" class="btn-nav-register">Register</a>
         }
       </div>
     </div>
@@ -56,7 +64,7 @@
   <nav class="mobile-tab-bar">
     <a routerLink="/marketplace" routerLinkActive="active" class="tab-item">
       <span class="tab-icon">🐄</span>
-      <span class="tab-label">Market</span>
+      <span class="tab-label">Catalog</span>
     </a>
     @if (authService.isAuthenticated()) {
       <a routerLink="/dispatch" routerLinkActive="active" class="tab-item">
@@ -67,17 +75,22 @@
         <span class="tab-icon">📅</span>
         <span class="tab-label">Cycles</span>
       </a>
-      <a routerLink="/kyc" routerLinkActive="active" class="tab-item">
-        <span class="tab-icon">🛡️</span>
-        <span class="tab-label">KYC</span>
-      </a>
       <a routerLink="/connections" routerLinkActive="active" class="tab-item">
         <span class="tab-icon">🤝</span>
         <span class="tab-label">Inquiries</span>
       </a>
       <a routerLink="/vet-console" routerLinkActive="active" class="tab-item">
         <span class="tab-icon">🏍️</span>
-        <span class="tab-label">Vet Console</span>
+        <span class="tab-label">Vet</span>
+      </a>
+    } @else {
+      <a routerLink="/login" routerLinkActive="active" class="tab-item">
+        <span class="tab-icon">🔐</span>
+        <span class="tab-label">Sign In</span>
+      </a>
+      <a routerLink="/register" routerLinkActive="active" class="tab-item">
+        <span class="tab-icon">✨</span>
+        <span class="tab-label">Register</span>
       </a>
     }
   </nav>
@@ -86,4 +99,112 @@
   <main class="main-content">
     <router-outlet></router-outlet>
   </main>
+
+  <!-- Inhabited Brand World Footer (Forest Green) -->
+  <footer class="app-footer">
+    <div class="footer-container">
+      <!-- Upper Footer: Newsletter/SMS Alert Dispatch & Fine-Line Map -->
+      <div class="footer-upper">
+        <!-- Newsletter / Paddock SMS Alert Column -->
+        <div class="footer-form-col">
+          <span class="footer-form-tag">RURAL DISPATCH NETWORK</span>
+          <h3 class="footer-form-title">Paddock Dispatch & Semen Straw Register</h3>
+          <p class="footer-form-desc">
+            Receive zero-drop estrus notifications, new Friesian and Ayrshire straw consignments, and direct KVB officer availability.
+          </p>
+
+          <form class="footer-subscribe-form" (submit)="$event.preventDefault()">
+            <input
+              type="text"
+              class="footer-input"
+              placeholder="Enter phone number or email..." />
+            <button type="submit" class="footer-btn-submit">
+              JOIN REGISTER
+            </button>
+          </form>
+
+          <div class="footer-sms-direct">
+            <span class="sms-badge">OFFLINE SMS</span>
+            <span class="sms-instruction">In low network pastures? Text <strong>START</strong> to <strong>20880</strong></span>
+          </div>
+        </div>
+
+        <!-- Fine-Line Region Network Map -->
+        <div class="footer-map-col">
+          <div class="map-label-capsule">
+            <span class="pulse-lime"></span>
+            ACTIVE REGIONAL VET HUBS
+          </div>
+
+          <svg class="line-network-map" viewBox="0 0 540 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Fine-line geographic contours -->
+            <path d="M 60 70 Q 140 30 240 50 T 420 80 Q 480 140 450 220 T 320 280 Q 180 300 100 240 Z" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" stroke-dasharray="4 3" />
+            <path d="M 120 100 Q 200 80 300 95 T 390 150 Q 410 210 330 240 T 170 230 Q 110 190 120 100 Z" stroke="rgba(195,205,167,0.3)" stroke-width="1.5" />
+
+            <!-- Relationship routes between hubs -->
+            <line x1="160" y1="120" x2="250" y2="150" stroke="rgba(255,255,255,0.35)" stroke-width="1" />
+            <line x1="250" y1="150" x2="340" y2="130" stroke="rgba(255,255,255,0.35)" stroke-width="1" />
+            <line x1="250" y1="150" x2="270" y2="220" stroke="rgba(255,255,255,0.35)" stroke-width="1" />
+            <line x1="270" y1="220" x2="190" y2="200" stroke="rgba(255,255,255,0.35)" stroke-width="1" />
+            <line x1="160" y1="120" x2="190" y2="200" stroke="rgba(255,255,255,0.35)" stroke-width="1" />
+
+            <!-- Hub Nodes -->
+            <!-- Eldoret -->
+            <circle cx="160" cy="120" r="11" stroke="rgba(255,255,255,0.5)" stroke-width="1" />
+            <circle cx="160" cy="120" r="4" fill="#ffffff" />
+            <text x="140" y="105" fill="#c3cda7" font-size="11" font-family="'Inter', sans-serif">Eldoret</text>
+
+            <!-- Nakuru (Focal Lime Node) -->
+            <circle cx="250" cy="150" r="14" fill="rgba(232,254,133,0.12)" stroke="#e8fe85" stroke-width="1.5" />
+            <circle cx="250" cy="150" r="5" fill="#e8fe85" />
+            <text x="258" y="145" fill="#e8fe85" font-size="12" font-weight="600" font-family="'Inter', sans-serif">Nakuru Central</text>
+
+            <!-- Nyeri -->
+            <circle cx="340" cy="130" r="11" stroke="rgba(255,255,255,0.5)" stroke-width="1" />
+            <circle cx="340" cy="130" r="4" fill="#ffffff" />
+            <text x="350" y="125" fill="#c3cda7" font-size="11" font-family="'Inter', sans-serif">Nyeri</text>
+
+            <!-- Naivasha -->
+            <circle cx="270" cy="220" r="11" stroke="rgba(255,255,255,0.5)" stroke-width="1" />
+            <circle cx="270" cy="220" r="4" fill="#ffffff" />
+            <text x="280" y="235" fill="#c3cda7" font-size="11" font-family="'Inter', sans-serif">Naivasha</text>
+
+            <!-- Kiambu / Nairobi -->
+            <circle cx="190" cy="200" r="11" stroke="rgba(255,255,255,0.5)" stroke-width="1" />
+            <circle cx="190" cy="200" r="4" fill="#ffffff" />
+            <text x="135" y="215" fill="#c3cda7" font-size="11" font-family="'Inter', sans-serif">Kiambu</text>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Middle Footer: Three-Line Serif Belief Statement -->
+      <div class="footer-belief-section">
+        <p class="belief-line-1">We believe in livestock resilience,</p>
+        <p class="belief-line-2">genetic integrity and farmer prosperity</p>
+        <p class="belief-line-3">from the pasture up.</p>
+      </div>
+
+      <!-- Lower Footer: Contact, Accreditations & Copyright -->
+      <div class="footer-bottom">
+        <div class="footer-meta-col">
+          <span class="footer-brand-title">Ranchr Livestock Platform</span>
+          <p class="footer-legal">
+            Operated in partnership with licensed Kenya Veterinary Board (KVB) practitioners. Two-way SMS powered by Africa's Talking gateway.
+          </p>
+        </div>
+
+        <div class="footer-links-col">
+          <a routerLink="/marketplace">Livestock Catalog</a>
+          <a routerLink="/dispatch">Emergency Heat Alert</a>
+          <a routerLink="/reproduction">21-Day Gestation Tracker</a>
+          <a routerLink="/kyc">KVB Accreditation</a>
+        </div>
+
+        <div class="footer-copy-col">
+          <span>&copy; 2026 Ranchr Kenya Ltd.</span>
+          <span class="regulatory-note">Registered with Veterinary Surgeons and Veterinary Para-Professionals Act (Cap 366).</span>
+        </div>
+      </div>
+    </div>
+  </footer>
 </div>

@@ -1,19 +1,140 @@
-/* Global styles for Ranchr */
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+/* Arva — fieldwork meets editorial
+   Design tokens & global styles for Ranchr
+*/
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&display=swap');
+
+:root {
+  /* Brand */
+  --color-forest: #07503f;
+  --color-cream: #f1efdf;
+  --color-sky: #b2cee7;
+  --color-sage: #c3cda7;
+
+  /* Accent */
+  --color-lime: #e8fe85;
+  --color-quote-blue: #d7e6f5;
+  --color-quote-green: #e4ebcf;
+
+  /* Neutral */
+  --color-canvas: #ffffff;
+  --color-soft-white: #fdfdfd;
+  --color-mist: #f8f8f8;
+  --color-benefit-cream: #f1f2e2;
+  --color-muted: #6d6d6d;
+  --color-ink: #353535;
+  --color-deep-ink: #212529;
+
+  /* Typography */
+  --font-serif: 'Newsreader', 'Reckless', Georgia, serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
 
 html, body {
   margin: 0;
   padding: 0;
-  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  color: #1e293b;
-  background-color: #f8fafc;
+  font-family: var(--font-sans);
+  font-weight: 300;
+  font-size: 17px;
+  line-height: 1.24;
+  color: var(--color-ink);
+  background-color: var(--color-canvas);
   -webkit-font-smoothing: antialiased;
-}
-
-* {
-  box-sizing: border-box;
 }
 
 button, input, select, textarea {
   font-family: inherit;
+}
+
+/* Common Arva Utility Classes */
+.serif-display {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  line-height: 1.06;
+}
+
+.serif-heading {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  line-height: 1;
+}
+
+.arva-capsule-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--color-forest);
+  color: #ffffff;
+  border-radius: 110px;
+  height: 49px;
+  padding: 6px 6px 6px 30px;
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: 15px;
+  text-decoration: none;
+  transition: all 0.4s ease;
+  border: none;
+  cursor: pointer;
+
+  .btn-arrow-disc {
+    width: 35px;
+    height: 35px;
+    background: #ffffff;
+    color: var(--color-forest);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 20px;
+    font-size: 14px;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover {
+    background: #053b2e;
+    color: #ffffff;
+
+    .btn-arrow-disc {
+      transform: translateX(3px);
+    }
+  }
+}
+
+.arva-capsule-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-sky);
+  color: var(--color-ink);
+  border-radius: 110px;
+  height: 49px;
+  padding: 6px 30px;
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: 15px;
+  text-decoration: none;
+  transition: all 0.4s ease;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    background: #ffffff;
+    color: var(--color-forest);
+  }
+}
+
+.arva-impact-tag {
+  display: inline-block;
+  background: var(--color-lime);
+  color: var(--color-deep-ink);
+  border-radius: 18.5px;
+  padding: 7px 20px;
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
