@@ -11,10 +11,11 @@ import { AuthService } from '../../../../core/services/auth.service';
   template: `
     <div class="register-wrapper">
       <div class="register-card">
+        <!-- Brand & Heading -->
         <div class="brand">
-          <span class="brand-badge">&#128004; RANCHR</span>
-          <h2>Create an Account</h2>
-          <p class="brand-sub">Livestock Genetics & KVB Veterinary Dispatch</p>
+          <span class="arva-tag">EAST AFRICAN BREEDING NETWORK</span>
+          <h2 class="serif-title">Create an Account</h2>
+          <p class="brand-sub">Pastoral genetics & KVB veterinary field dispatch</p>
         </div>
 
         @if (errorMessage()) {
@@ -24,24 +25,38 @@ import { AuthService } from '../../../../core/services/auth.service';
         <form [formGroup]="registerForm" (ngSubmit)="submitRegister()">
           <!-- Role Selector -->
           <div class="form-group">
-            <label>Select Your Primary Role</label>
+            <label class="group-label">Select Your Operating Role</label>
             <div class="role-grid">
               <label class="role-card" [class.selected]="registerForm.get('role')?.value === 'USER'">
                 <input type="radio" formControlName="role" value="USER" class="sr-only" />
                 <span class="role-icon">🧑‍🌾</span>
                 <span class="role-title">Farmer / Breeder</span>
-                <span class="role-desc">Manage herd heat alerts & order AI genetics</span>
+                <span class="role-desc">Manage herd estrus alerts & source certified AI semen straws</span>
               </label>
 
               <label class="role-card" [class.selected]="registerForm.get('role')?.value === 'VET'">
                 <input type="radio" formControlName="role" value="VET" class="sr-only" />
                 <span class="role-icon">👨‍⚕️</span>
                 <span class="role-title">KVB Veterinary Officer</span>
-                <span class="role-desc">Receive emergency heat calls & field dispatch</span>
+                <span class="role-desc">Receive emergency rural heat calls & field clinical jobs</span>
               </label>
             </div>
           </div>
 
+          <!-- KVB Regulatory Trust Badge -->
+          <div class="kvb-trust-badge" [class.highlight]="registerForm.get('role')?.value === 'VET'">
+            <span class="trust-icon">🛡️</span>
+            <div class="trust-content">
+              <strong>Kenya Veterinary Board (KVB) Verified Network</strong>
+              <span>
+                {{ registerForm.get('role')?.value === 'VET' 
+                  ? 'Active KVB registration and certificate number will be verified during onboarding.' 
+                  : 'All artificial inseminations performed by licensed KVB veterinary officers.' }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Form Fields -->
           <div class="form-group">
             <label for="username">Username</label>
             <input
@@ -49,7 +64,7 @@ import { AuthService } from '../../../../core/services/auth.service';
               type="text"
               class="form-control"
               formControlName="username"
-              placeholder="e.g. farmer_john" />
+              placeholder="e.g. farmer_john or dr_kamau" />
           </div>
 
           <div class="form-group">
@@ -72,11 +87,18 @@ import { AuthService } from '../../../../core/services/auth.service';
               placeholder="At least 6 characters" />
           </div>
 
+          <!-- Dynamic Role-Based Action Button -->
           <button
             type="submit"
-            class="btn-submit"
+            class="btn-arva-submit"
             [disabled]="isLoading() || registerForm.invalid">
-            {{ isLoading() ? 'Creating Account...' : 'Register & Continue' }}
+            @if (isLoading()) {
+              <span>Creating Account...</span>
+            } @else if (registerForm.get('role')?.value === 'VET') {
+              <span>Register as KVB Veterinary Officer →</span>
+            } @else {
+              <span>Join as Farmer / Breeder →</span>
+            }
           </button>
         </form>
 
@@ -89,102 +111,197 @@ import { AuthService } from '../../../../core/services/auth.service';
   `,
   styles: [`
     .register-wrapper {
-      min-height: 80vh;
+      min-height: 85vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 1.5rem 1rem;
+      padding: 60px 20px;
+      background: var(--color-cream);
     }
+
     .register-card {
       background: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      padding: 2rem;
-      max-width: 480px;
+      border: 1px solid rgba(7, 80, 63, 0.12);
+      border-radius: 30px;
+      padding: 48px 40px;
+      max-width: 520px;
       width: 100%;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 16px 40px rgba(7, 80, 63, 0.05);
+
+      @media (max-width: 540px) {
+        padding: 32px 20px;
+        border-radius: 20px;
+      }
     }
+
     .brand {
       text-align: center;
-      margin-bottom: 1.5rem;
+      margin-bottom: 28px;
+
+      .arva-tag {
+        font-family: var(--font-sans);
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        color: var(--color-forest);
+        background: var(--color-benefit-cream);
+        padding: 4px 14px;
+        border-radius: 110px;
+        display: inline-block;
+        margin-bottom: 12px;
+      }
+
+      .serif-title {
+        font-family: var(--font-serif);
+        font-weight: 300;
+        font-size: 34px;
+        line-height: 1.1;
+        color: var(--color-forest);
+        margin: 0 0 6px 0;
+      }
+
+      .brand-sub {
+        font-family: var(--font-sans);
+        font-size: 14px;
+        color: var(--color-muted);
+        margin: 0;
+      }
     }
-    .brand-badge {
-      font-weight: 800;
-      letter-spacing: 0.1em;
-      color: #15803d;
-      font-size: 0.85rem;
-    }
-    h2 {
-      margin: 0.3rem 0;
-      font-size: 1.5rem;
-      color: #0f172a;
-    }
-    .brand-sub {
-      font-size: 0.8rem;
-      color: #64748b;
-      margin: 0;
-    }
+
     .alert-danger {
       background: #fef2f2;
-      border: 1px solid #f87171;
-      color: #b91c1c;
-      padding: 0.75rem;
-      border-radius: 6px;
-      font-size: 0.85rem;
-      margin-bottom: 1rem;
+      border: 1px solid #fca5a5;
+      color: #991b1b;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      margin-bottom: 20px;
     }
+
     .form-group {
-      margin-bottom: 1rem;
-      label {
+      margin-bottom: 18px;
+
+      .group-label, label {
         display: block;
-        font-weight: 600;
-        font-size: 0.85rem;
-        color: #334155;
-        margin-bottom: 0.4rem;
+        font-family: var(--font-sans);
+        font-weight: 500;
+        font-size: 13.5px;
+        color: var(--color-deep-ink);
+        margin-bottom: 6px;
       }
+
       .form-control {
         width: 100%;
-        padding: 0.75rem;
-        border: 1px solid #cbd5e1;
-        border-radius: 8px;
-        box-sizing: border-box;
+        padding: 12px 16px;
+        background: var(--color-mist);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        font-family: var(--font-sans);
+        font-size: 14.5px;
+        color: var(--color-ink);
+        outline: none;
+        transition: border-color 0.2s, background 0.2s;
+
+        &:focus {
+          border-color: var(--color-forest);
+          background: #ffffff;
+        }
       }
     }
+
     .role-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 0.75rem;
-      margin-bottom: 0.5rem;
+      gap: 12px;
+      margin-bottom: 8px;
+
+      @media (max-width: 480px) {
+        grid-template-columns: 1fr;
+      }
     }
+
     .role-card {
-      border: 2px solid #e2e8f0;
-      border-radius: 8px;
-      padding: 0.75rem;
+      border: 1.5px solid rgba(0, 0, 0, 0.1);
+      background: var(--color-mist);
+      border-radius: 15px;
+      padding: 16px 12px;
       cursor: pointer;
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
-      transition: all 0.2s ease;
+      transition: all 0.25s ease;
+
       &.selected {
-        border-color: #15803d;
-        background-color: #f0fdf4;
+        border-color: var(--color-forest);
+        background: #f4f8f6;
+        box-shadow: 0 4px 12px rgba(7, 80, 63, 0.08);
+
+        .role-title {
+          color: var(--color-forest);
+        }
       }
+
       .role-icon {
-        font-size: 1.5rem;
-        margin-bottom: 0.25rem;
+        font-size: 26px;
+        margin-bottom: 6px;
       }
+
       .role-title {
-        font-weight: 700;
-        font-size: 0.85rem;
-        color: #0f172a;
+        font-family: var(--font-sans);
+        font-weight: 600;
+        font-size: 13.5px;
+        color: var(--color-deep-ink);
       }
+
       .role-desc {
-        font-size: 0.7rem;
-        color: #64748b;
-        margin-top: 0.25rem;
+        font-family: var(--font-sans);
+        font-size: 11.5px;
+        line-height: 1.35;
+        color: var(--color-muted);
+        margin-top: 4px;
       }
     }
+
+    .kvb-trust-badge {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      background: rgba(195, 205, 167, 0.18);
+      border: 1px solid var(--color-sage);
+      border-radius: 12px;
+      padding: 10px 14px;
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+
+      &.highlight {
+        background: rgba(232, 254, 133, 0.2);
+        border-color: var(--color-forest);
+      }
+
+      .trust-icon {
+        font-size: 18px;
+        line-height: 1;
+        flex-shrink: 0;
+      }
+
+      .trust-content {
+        font-size: 12px;
+        line-height: 1.4;
+        color: var(--color-forest);
+
+        strong {
+          display: block;
+          font-weight: 600;
+          color: var(--color-forest);
+          margin-bottom: 2px;
+        }
+        span {
+          color: #4a5d4e;
+        }
+      }
+    }
+
     .sr-only {
       position: absolute;
       width: 1px;
@@ -195,33 +312,44 @@ import { AuthService } from '../../../../core/services/auth.service';
       clip: rect(0, 0, 0, 0);
       border: 0;
     }
-    .btn-submit {
+
+    .btn-arva-submit {
       width: 100%;
-      padding: 0.85rem;
-      background: #15803d;
+      height: 49px;
+      background: var(--color-forest);
       color: #ffffff;
       border: none;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 0.95rem;
+      border-radius: 110px;
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: 15px;
+      letter-spacing: 0.02em;
       cursor: pointer;
-      margin-top: 0.5rem;
+      margin-top: 10px;
+      transition: all 0.3s ease;
+
       &:hover:not(:disabled) {
-        background: #166534;
+        background: #053b2e;
+        box-shadow: 0 4px 14px rgba(7, 80, 63, 0.2);
       }
+
       &:disabled {
-        opacity: 0.6;
+        opacity: 0.55;
+        cursor: not-allowed;
       }
     }
+
     .auth-switch {
-      margin-top: 1.5rem;
+      margin-top: 24px;
       text-align: center;
-      font-size: 0.85rem;
-      color: #64748b;
+      font-size: 13.5px;
+      color: var(--color-muted);
+
       .switch-link {
-        color: #15803d;
-        font-weight: 700;
+        color: var(--color-forest);
+        font-weight: 600;
         text-decoration: none;
+
         &:hover {
           text-decoration: underline;
         }

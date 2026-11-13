@@ -11,10 +11,11 @@ import { AuthService } from '../../../../core/services/auth.service';
   template: `
     <div class="login-wrapper">
       <div class="login-card">
+        <!-- Brand & Heading -->
         <div class="brand">
-          <span class="brand-badge">&#128004; RANCHR</span>
-          <h2>Sign In to Ranchr</h2>
-          <p class="brand-sub">Livestock Genetics & KVB Veterinary Dispatch</p>
+          <span class="arva-tag">EAST AFRICAN BREEDING REGISTER</span>
+          <h2 class="serif-title">Sign In to Ranchr</h2>
+          <p class="brand-sub">Pastoral genetics & KVB veterinary field dispatch</p>
         </div>
 
         @if (errorMessage()) {
@@ -29,7 +30,7 @@ import { AuthService } from '../../../../core/services/auth.service';
               type="text"
               class="form-control"
               formControlName="username"
-              placeholder="e.g., farmer_john or dr_kamau" />
+              placeholder="e.g. farmer_john or dr_kamau" />
           </div>
 
           <div class="form-group">
@@ -44,26 +45,27 @@ import { AuthService } from '../../../../core/services/auth.service';
 
           <button
             type="submit"
-            class="btn-submit"
+            class="btn-arva-submit"
             [disabled]="isLoading() || loginForm.invalid">
-            {{ isLoading() ? 'Authenticating...' : 'Sign In' }}
+            {{ isLoading() ? 'Authenticating...' : 'Sign In to Console →' }}
           </button>
         </form>
 
+        <!-- Quick Demo Credentials (Arva Soft Capsules) -->
         <div class="quick-credentials">
-          <span class="quick-title">Quick Demo Logins:</span>
+          <span class="quick-title">Quick Demo Profiles:</span>
           <div class="btn-group">
             <button
               type="button"
-              class="btn-quick"
+              class="btn-quick-capsule"
               (click)="fillCredentials('farmer_demo', 'password123')">
-              🧑‍🌾 Farmer Login
+              🧑‍🌾 Farmer Demo
             </button>
             <button
               type="button"
-              class="btn-quick"
+              class="btn-quick-capsule vet"
               (click)="fillCredentials('vet_kamau', 'password123')">
-              👨‍⚕️ KVB Vet Login
+              👨‍⚕️ KVB Vet Demo
             </button>
           </div>
         </div>
@@ -77,124 +79,190 @@ import { AuthService } from '../../../../core/services/auth.service';
   `,
   styles: [`
     .login-wrapper {
-      min-height: 80vh;
+      min-height: 85vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 1rem;
+      padding: 60px 20px;
+      background: var(--color-cream);
     }
+
     .login-card {
       background: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      padding: 2rem;
-      max-width: 400px;
+      border: 1px solid rgba(7, 80, 63, 0.12);
+      border-radius: 30px;
+      padding: 48px 40px;
+      max-width: 440px;
       width: 100%;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 16px 40px rgba(7, 80, 63, 0.05);
+
+      @media (max-width: 480px) {
+        padding: 32px 20px;
+        border-radius: 20px;
+      }
     }
+
     .brand {
       text-align: center;
-      margin-bottom: 1.5rem;
+      margin-bottom: 28px;
+
+      .arva-tag {
+        font-family: var(--font-sans);
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        color: var(--color-forest);
+        background: var(--color-benefit-cream);
+        padding: 4px 14px;
+        border-radius: 110px;
+        display: inline-block;
+        margin-bottom: 12px;
+      }
+
+      .serif-title {
+        font-family: var(--font-serif);
+        font-weight: 300;
+        font-size: 34px;
+        line-height: 1.1;
+        color: var(--color-forest);
+        margin: 0 0 6px 0;
+      }
+
+      .brand-sub {
+        font-family: var(--font-sans);
+        font-size: 14px;
+        color: var(--color-muted);
+        margin: 0;
+      }
     }
-    .brand-badge {
-      font-weight: 800;
-      letter-spacing: 0.1em;
-      color: #15803d;
-      font-size: 0.85rem;
-    }
-    h2 {
-      margin: 0.3rem 0;
-      font-size: 1.5rem;
-      color: #0f172a;
-    }
-    .brand-sub {
-      font-size: 0.8rem;
-      color: #64748b;
-      margin: 0;
-    }
+
     .alert-danger {
       background: #fef2f2;
-      border: 1px solid #f87171;
-      color: #b91c1c;
-      padding: 0.75rem;
-      border-radius: 6px;
-      font-size: 0.85rem;
-      margin-bottom: 1rem;
+      border: 1px solid #fca5a5;
+      color: #991b1b;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      margin-bottom: 20px;
     }
+
     .form-group {
-      margin-bottom: 1rem;
+      margin-bottom: 18px;
+
       label {
         display: block;
-        font-weight: 600;
-        font-size: 0.85rem;
-        color: #334155;
-        margin-bottom: 0.3rem;
+        font-family: var(--font-sans);
+        font-weight: 500;
+        font-size: 13.5px;
+        color: var(--color-deep-ink);
+        margin-bottom: 6px;
       }
+
       .form-control {
         width: 100%;
-        padding: 0.75rem;
-        border: 1px solid #cbd5e1;
-        border-radius: 8px;
-        box-sizing: border-box;
+        padding: 12px 16px;
+        background: var(--color-mist);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        font-family: var(--font-sans);
+        font-size: 14.5px;
+        color: var(--color-ink);
+        outline: none;
+        transition: border-color 0.2s, background 0.2s;
+
+        &:focus {
+          border-color: var(--color-forest);
+          background: #ffffff;
+        }
       }
     }
-    .btn-submit {
+
+    .btn-arva-submit {
       width: 100%;
-      padding: 0.85rem;
-      background: #15803d;
+      height: 49px;
+      background: var(--color-forest);
       color: #ffffff;
       border: none;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 0.95rem;
+      border-radius: 110px;
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: 15px;
+      letter-spacing: 0.02em;
       cursor: pointer;
-      margin-top: 0.5rem;
+      margin-top: 10px;
+      transition: all 0.3s ease;
+
       &:hover:not(:disabled) {
-        background: #166534;
+        background: #053b2e;
+        box-shadow: 0 4px 14px rgba(7, 80, 63, 0.2);
       }
+
       &:disabled {
-        opacity: 0.6;
+        opacity: 0.55;
+        cursor: not-allowed;
       }
     }
+
     .quick-credentials {
-      margin-top: 1.5rem;
-      padding-top: 1rem;
-      border-top: 1px solid #f1f5f9;
+      margin-top: 28px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(0, 0, 0, 0.08);
+
       .quick-title {
         display: block;
-        font-size: 0.75rem;
-        font-weight: 700;
-        color: #94a3b8;
-        margin-bottom: 0.5rem;
-        text-transform: uppercase;
+        font-size: 11.5px;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        color: var(--color-muted);
+        margin-bottom: 10px;
+        text-align: center;
       }
+
       .btn-group {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 0.5rem;
-        .btn-quick {
-          padding: 0.5rem;
-          background: #f8fafc;
-          border: 1px solid #cbd5e1;
-          border-radius: 6px;
-          font-size: 0.8rem;
+        gap: 8px;
+
+        .btn-quick-capsule {
+          background: var(--color-benefit-cream);
+          border: 1px solid rgba(7, 80, 63, 0.15);
+          color: var(--color-forest);
+          padding: 8px 12px;
+          border-radius: 110px;
+          font-family: var(--font-sans);
+          font-size: 12.5px;
           font-weight: 600;
           cursor: pointer;
+          transition: all 0.2s;
+
           &:hover {
-            background: #f1f5f9;
+            background: var(--color-lime);
+          }
+
+          &.vet {
+            background: rgba(178, 206, 231, 0.25);
+            border-color: var(--color-sky);
+            color: var(--color-forest);
+
+            &:hover {
+              background: var(--color-sky);
+            }
           }
         }
       }
     }
+
     .auth-switch {
-      margin-top: 1.5rem;
+      margin-top: 24px;
       text-align: center;
-      font-size: 0.85rem;
-      color: #64748b;
+      font-size: 13.5px;
+      color: var(--color-muted);
+
       .switch-link {
-        color: #15803d;
-        font-weight: 700;
+        color: var(--color-forest);
+        font-weight: 600;
         text-decoration: none;
+
         &:hover {
           text-decoration: underline;
         }
@@ -211,12 +279,12 @@ export class LoginComponent {
   readonly errorMessage = signal<string | null>(null);
 
   loginForm = this.fb.group({
-    username: ['', Validators.required],
-    password: ['', Validators.required],
+    username: ['', [Validators.required]],
+    password: ['', [Validators.required]],
   });
 
-  fillCredentials(u: string, p: string): void {
-    this.loginForm.setValue({ username: u, password: p });
+  fillCredentials(username: string, password: string): void {
+    this.loginForm.patchValue({ username, password });
   }
 
   submitLogin(): void {
@@ -226,19 +294,22 @@ export class LoginComponent {
     this.errorMessage.set(null);
 
     const { username, password } = this.loginForm.value;
-    this.authService.login({ username: username!, password: password! }).subscribe({
-      next: () => {
-        this.isLoading.set(false);
-        if (this.authService.isVet()) {
-          this.router.navigate(['/vet-console']);
-        } else {
-          this.router.navigate(['/dispatch']);
-        }
-      },
-      error: (err) => {
-        this.isLoading.set(false);
-        this.errorMessage.set(err.error?.message || 'Invalid username or password.');
-      },
-    });
+
+    this.authService
+      .login({
+        username: username!,
+        password: password!,
+      })
+      .subscribe({
+        next: () => {
+          this.isLoading.set(false);
+          const target = this.authService.isVet() ? '/vet-console' : '/dispatch';
+          this.router.navigate([target]);
+        },
+        error: (err) => {
+          this.isLoading.set(false);
+          this.errorMessage.set(err.error?.message || 'Invalid username or password.');
+        },
+      });
   }
 }
