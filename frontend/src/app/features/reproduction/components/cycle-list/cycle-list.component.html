@@ -70,7 +70,7 @@
                     <span class="urgent-text">Estrus check due now!</span>
                   }
                 } @else if (cycle.status === 'HEAT_RETURNED') {
-                  <span class="text-failed">Heat returned</span>
+                  <span class="text-failed">Heat returned (Non-conception)</span>
                 } @else {
                   <span class="text-passed">Conception passed</span>
                 }
@@ -85,6 +85,12 @@
                     (click)="recordHeatReturned(cycle)">
                     &#9888; Heat Returned (Failed)
                   </button>
+                </div>
+              } @else if (cycle.status === 'HEAT_RETURNED') {
+                <div class="milestone-actions">
+                  <a routerLink="/dispatch" class="btn-action heat-btn" style="text-decoration: none; display: inline-block;">
+                    ⚡ Dispatch Repeat AI
+                  </a>
                 </div>
               }
             </div>

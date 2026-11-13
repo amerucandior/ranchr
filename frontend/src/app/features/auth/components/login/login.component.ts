@@ -1,13 +1,13 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   template: `
     <div class="login-wrapper">
       <div class="login-card">
@@ -66,6 +66,11 @@ import { AuthService } from '../../../../core/services/auth.service';
               👨‍⚕️ KVB Vet Login
             </button>
           </div>
+        </div>
+
+        <div class="auth-switch">
+          <span>Don't have an account? </span>
+          <a routerLink="/register" class="switch-link">Create Account</a>
         </div>
       </div>
     </div>
@@ -178,6 +183,20 @@ import { AuthService } from '../../../../core/services/auth.service';
           &:hover {
             background: #f1f5f9;
           }
+        }
+      }
+    }
+    .auth-switch {
+      margin-top: 1.5rem;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #64748b;
+      .switch-link {
+        color: #15803d;
+        font-weight: 700;
+        text-decoration: none;
+        &:hover {
+          text-decoration: underline;
         }
       }
     }

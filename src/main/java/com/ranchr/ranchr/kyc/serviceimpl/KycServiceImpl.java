@@ -6,6 +6,7 @@ import com.ranchr.authentication.repository.UserRepository;
 import com.ranchr.authentication.security.CurrentUser;
 import com.ranchr.exceptions.DuplicateUserException;
 import com.ranchr.ranchr.kyc.dto.KycRequest;
+import com.ranchr.ranchr.kyc.dto.KycStatusDto;
 import com.ranchr.ranchr.kyc.dto.OtpRequest;
 import com.ranchr.ranchr.kyc.model.Kyc;
 import com.ranchr.ranchr.kyc.otp.service.OtpService;
@@ -78,6 +79,14 @@ public class KycServiceImpl implements KycService {
 		kyc.setVerified(true);
 		kyc.setVerifiedAt(LocalDateTime.now());
 		kycRepository.save(kyc);
+	}
+
+	@Override
+	public KycStatusDto getKycStatus() {
+		User user = currentUser.get();
+		return kycRepository.findByUser(user)
+				.map(k -> new KycStatusDto(k.isVerified(), k.getPhoneNumber(), k.getNationalId(), k.getVerifiedAt()))
+				.orElseGet(() -> new KycStatusDto(false, null, null, null));
 	}
 
 }

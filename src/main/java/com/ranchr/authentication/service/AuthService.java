@@ -41,11 +41,13 @@ public class AuthService {
 			throw new DuplicateUserException("Email already registered");
 		}
 
+		Role userRole = request.role() != null ? request.role() : Role.USER;
+
 		User user = User.builder()
 							.username(request.username())
 							.email(request.email())
 							.password(passwordEncoder.encode(request.password()))
-							.role(Role.USER)
+							.role(userRole)
 							.build();
 
 		userRepository.save(user);

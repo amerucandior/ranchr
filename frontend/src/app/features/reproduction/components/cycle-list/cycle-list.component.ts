@@ -1,6 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { ReproductionService } from '../../services/reproduction.service';
 import {
   CreateReproductiveCycleDto,
@@ -10,7 +11,7 @@ import {
 @Component({
   selector: 'app-cycle-list',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './cycle-list.component.html',
   styleUrls: ['./cycle-list.component.scss'],
 })

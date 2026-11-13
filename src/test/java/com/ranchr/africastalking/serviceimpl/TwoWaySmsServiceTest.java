@@ -181,4 +181,41 @@ class TwoWaySmsServiceTest {
         verify(reproductiveCycleRepository, times(1)).save(cycle);
         verify(smsService, times(1)).send(eq("+254799887766"), contains("Recorded NO return to heat"));
     }
+
+    @Test
+    void testProcessInboundSms_VetStartsTransit() {
+        when(kycRepository.findByPhoneNumberEndingWith(eq("711223344"))).thenReturn(Optional.of(vetKyc));
+        when(vetProfileRepository.findByVetId(vetUser.getUserId())).thenReturn(Optional.of(vetProfile));
+
+        ServiceRequest serviceReq = new ServiceRequest();
+        serviceReq.setServiceId(UUID.randomUUID());
+        serviceReq.setAnimalSpecies("Dairy Heifer");
+        serviceReq.setLocation("Njoro");
+        serviceReq.setFarmer(User.builder().username("farmer_bob").build());
+
+        when(serviceRequestRepository.findTopByVetProfileAndStatusOrderByCreatedAtDesc(vetProfile, ServiceStatus.ACCEPTED))
+                .thenReturn(Optional.of(serviceReq));
+
+        InboundSmsDto sms = new InboundSmsDto("+254711223344", "20880", "START", null, "id111", null);
+        String reply = twoWaySmsService.processInboundSms(sms);
+
+        assertTrue(reply.contains("marked IN_PROGRESS"));
+        verify(serviceRequestService, times(1)).startService(serviceReq.getServiceId(), vetUser.getUserId());
+    }
+
+    @Test
+    void testProcessInboundSms_VetChecksStatus() {
+        when(kycRepository.findByPhoneNumberEndingWith(eq("711223344"))).thenReturn(Optional.of(vetKyc));
+        when(vetProfileRepository.findByVetId(vetUser.getUserId())).thenReturn(Optional.of(vetProfile));
+        when(serviceRequestRepository.findByVetProfileAndStatus(vetProfile, ServiceStatus.ACCEPTED))
+                .thenReturn(java.util.List.of());
+        when(serviceRequestRepository.findByVetProfileAndStatus(vetProfile, ServiceStatus.IN_PROGRESS))
+                .thenReturn(java.util.List.of());
+
+        InboundSmsDto sms = new InboundSmsDto("+254711223344", "20880", "STATUS", null, "id222", null);
+        String reply = twoWaySmsService.processInboundSms(sms);
+
+        assertTrue(reply.contains("Dr. Jane Vet"));
+        assertTrue(reply.contains("0 active service assignments"));
+    }
 }

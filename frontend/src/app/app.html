@@ -15,12 +15,21 @@
 
       <!-- Navigation Links -->
       <nav class="nav-links">
+        <a routerLink="/marketplace" routerLinkActive="active" class="nav-item">
+          🐄 Marketplace
+        </a>
         @if (authService.isAuthenticated()) {
           <a routerLink="/dispatch" routerLinkActive="active" class="nav-item">
             ⚡ Heat Dispatch
           </a>
           <a routerLink="/reproduction" routerLinkActive="active" class="nav-item">
             📅 21-Day Calendar
+          </a>
+          <a routerLink="/kyc" routerLinkActive="active" class="nav-item">
+            🛡️ KYC & KVB
+          </a>
+          <a routerLink="/connections" routerLinkActive="active" class="nav-item">
+            🤝 Inquiries
           </a>
           <a routerLink="/vet-console" routerLinkActive="active" class="nav-item vet-link">
             🏍️ Vet Console
@@ -44,8 +53,12 @@
   </header>
 
   <!-- Mobile Bottom Tab Bar -->
-  @if (authService.isAuthenticated()) {
-    <nav class="mobile-tab-bar">
+  <nav class="mobile-tab-bar">
+    <a routerLink="/marketplace" routerLinkActive="active" class="tab-item">
+      <span class="tab-icon">🐄</span>
+      <span class="tab-label">Market</span>
+    </a>
+    @if (authService.isAuthenticated()) {
       <a routerLink="/dispatch" routerLinkActive="active" class="tab-item">
         <span class="tab-icon">⚡</span>
         <span class="tab-label">Dispatch</span>
@@ -54,12 +67,20 @@
         <span class="tab-icon">📅</span>
         <span class="tab-label">Cycles</span>
       </a>
+      <a routerLink="/kyc" routerLinkActive="active" class="tab-item">
+        <span class="tab-icon">🛡️</span>
+        <span class="tab-label">KYC</span>
+      </a>
+      <a routerLink="/connections" routerLinkActive="active" class="tab-item">
+        <span class="tab-icon">🤝</span>
+        <span class="tab-label">Inquiries</span>
+      </a>
       <a routerLink="/vet-console" routerLinkActive="active" class="tab-item">
         <span class="tab-icon">🏍️</span>
         <span class="tab-label">Vet Console</span>
       </a>
-    </nav>
-  }
+    }
+  </nav>
 
   <!-- Main Content Outlet -->
   <main class="main-content">

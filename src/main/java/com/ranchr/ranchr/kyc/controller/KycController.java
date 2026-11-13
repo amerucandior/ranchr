@@ -1,6 +1,7 @@
 package com.ranchr.ranchr.kyc.controller;
 
 import com.ranchr.ranchr.kyc.dto.KycRequest;
+import com.ranchr.ranchr.kyc.dto.KycStatusDto;
 import com.ranchr.ranchr.kyc.dto.OtpRequest;
 import com.ranchr.ranchr.kyc.otp.service.OtpService;
 import com.ranchr.ranchr.kyc.service.KycService;
@@ -11,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,10 +48,20 @@ public class KycController {
 			description = "Confirms the 6-digit OTP received via SMS. Completes KYC verification for the authenticated user."
 	)
 	@ApiResponse(responseCode = "200", description = "Phone number verified")
-	@ApiResponse(responseCode = "401", description = "Invalid or expired OTP")	@PostMapping("/verify")
+	@ApiResponse(responseCode = "401", description = "Invalid or expired OTP")
+	@PostMapping("/verify")
 	public ResponseEntity<String> verifyOtp(@Valid @RequestBody OtpRequest request) {
 		kycService.verifyOtp(request);
 		return ResponseEntity.ok("Phone number verified");
+	}
 
+	@Operation(
+			summary = "Get current user KYC status",
+			description = "Returns verification status, registered phone number, national ID, and verification timestamp."
+	)
+	@ApiResponse(responseCode = "200", description = "Current KYC status returned")
+	@GetMapping("/status")
+	public ResponseEntity<KycStatusDto> getKycStatus() {
+		return ResponseEntity.ok(kycService.getKycStatus());
 	}
 }
