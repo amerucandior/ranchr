@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { provideRouter, ActivatedRoute } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { FarmerDispatchComponent } from './farmer-dispatch.component';
@@ -82,5 +82,24 @@ describe('FarmerDispatchComponent', () => {
         location: 'Njoro Agricultural Ward',
       })
     );
+  });
+
+  it('should set selectedStrawInfo and patch description when genetics query params arrive', () => {
+    const route = TestBed.inject(ActivatedRoute);
+    (route as any).queryParams = of({
+      listingId: 'list-99',
+      breed: 'Ayrshire Supreme',
+      fee: 75000,
+      location: 'Eldoret',
+    });
+    (component as any).readGeneticsQueryParams();
+
+    expect(component.selectedStrawInfo()).toEqual({
+      listingId: 'list-99',
+      breed: 'Ayrshire Supreme',
+      fee: 75000,
+    });
+    expect(component.dispatchForm.get('description')?.value).toContain('Ayrshire Supreme');
+    expect(component.dispatchForm.get('location')?.value).toBe('Eldoret');
   });
 });

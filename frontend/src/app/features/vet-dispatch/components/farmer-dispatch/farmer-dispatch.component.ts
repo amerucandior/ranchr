@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { VetDispatchService } from '../../services/vet-dispatch.service';
 import {
@@ -23,12 +23,14 @@ export class FarmerDispatchComponent implements OnInit, OnDestroy {
   private readonly vetService = inject(VetDispatchService);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
   readonly availableVets = signal<VetProfileResponseDto[]>([]);
   readonly activeRequests = signal<ServiceRequestResponseDto[]>([]);
   readonly isSubmitting = signal<boolean>(false);
   readonly successMessage = signal<string | null>(null);
   readonly errorMessage = signal<string | null>(null);
+  readonly selectedStrawInfo = signal<{ listingId?: string; breed?: string; fee?: number } | null>(null);
 
   // 12-Hour Heat Window countdown timer
   readonly hoursRemaining = signal<number>(12);
@@ -52,6 +54,30 @@ export class FarmerDispatchComponent implements OnInit, OnDestroy {
     this.loadAvailableVets();
     this.loadMyRequests();
     this.subscribeToRealtimeUpdates();
+    this.readGeneticsQueryParams();
+  }
+
+  private readGeneticsQueryParams(): void {
+    this.route.queryParams.subscribe((params) => {
+      if (params['listingId'] || params['breed']) {
+        const breed = params['breed'] || 'Verified Genetic Straw';
+        const fee = params['fee'] ? ` (Fee: KES ${Number(params['fee']).toLocaleString()})` : '';
+        this.selectedStrawInfo.set({
+          listingId: params['listingId'],
+          breed: params['breed'],
+          fee: params['fee'] ? Number(params['fee']) : undefined,
+        });
+
+        this.dispatchForm.patchValue({
+          isHeatAlert: true,
+          description: `Urgent AI dispatch for ${breed}${fee}. Semen straw listing #${params['listingId'] || ''}. Liquid nitrogen carrier required.`,
+        });
+
+        if (params['location']) {
+          this.dispatchForm.patchValue({ location: params['location'] });
+        }
+      }
+    });
   }
 
   private startHeatClock(): void {

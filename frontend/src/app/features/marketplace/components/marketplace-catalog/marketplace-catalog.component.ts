@@ -34,9 +34,10 @@ import { AuthService } from '../../../../core/services/auth.service';
             </p>
 
             <div class="scenic-actions">
-              <a routerLink="/dispatch" class="arva-capsule-primary">
+              <a routerLink="/dispatch" class="arva-capsule-primary urgent-action">
+                <span class="pulse-indicator-inline"></span>
                 <span>REQUEST FIELD DISPATCH</span>
-                <span class="btn-arrow-disc">→</span>
+                <span class="btn-arrow-disc lime-disc">→</span>
               </a>
               <a href="#catalog-section" class="arva-capsule-secondary">
                 <span>EXPLORE BREEDING REGISTER</span>
@@ -406,8 +407,17 @@ import { AuthService } from '../../../../core/services/auth.service';
                         (click)="expressInterest(item)">
                         ❤️ {{ item.interestCount }}
                       </button>
+                      @if (item.serviceType === 'ARTIFICIAL_INSEMINATION' || item.serviceType === 'BOTH') {
+                        <a
+                          [routerLink]="['/dispatch']"
+                          [queryParams]="{ listingId: item.id, breed: item.breed || item.animalType, fee: item.fee, location: item.location }"
+                          class="btn-card-dispatch"
+                          title="Dispatch KVB vet for this straw">
+                          ⚡ Dispatch AI
+                        </a>
+                      }
                       <a [routerLink]="['/connections']" [queryParams]="{ listingId: item.id }" class="btn-card-connect">
-                        Connect with Seller →
+                        Inquire →
                       </a>
                     </div>
                   </div>
@@ -549,6 +559,27 @@ import { AuthService } from '../../../../core/services/auth.service';
       gap: 20px;
       flex-wrap: wrap;
       margin-bottom: 45px;
+
+      .urgent-action {
+        border: 1.5px solid var(--color-lime);
+        box-shadow: 0 0 24px rgba(232, 254, 133, 0.3);
+
+        .pulse-indicator-inline {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          background: var(--color-lime);
+          box-shadow: 0 0 8px var(--color-lime);
+          margin-right: 10px;
+          animation: arva-pulse 1.5s infinite;
+        }
+
+        .lime-disc {
+          background: var(--color-lime);
+          color: var(--color-forest);
+          font-weight: 700;
+        }
+      }
     }
 
     .scenic-scroll-cue {
@@ -1169,6 +1200,25 @@ import { AuthService } from '../../../../core/services/auth.service';
             }
           }
 
+          .btn-card-dispatch {
+            display: inline-flex;
+            align-items: center;
+            padding: 5px 12px;
+            background: var(--color-forest);
+            color: var(--color-lime);
+            border-radius: 110px;
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            letter-spacing: 0.03em;
+            transition: all 0.2s;
+
+            &:hover {
+              background: #053b2e;
+              color: #ffffff;
+            }
+          }
+
           .btn-card-connect {
             font-size: 13px;
             font-weight: 600;
@@ -1232,6 +1282,12 @@ import { AuthService } from '../../../../core/services/auth.service';
 
     @keyframes arva-spin {
       to { transform: rotate(360deg); }
+    }
+
+    @keyframes arva-pulse {
+      0% { transform: scale(0.9); opacity: 0.8; }
+      50% { transform: scale(1.3); opacity: 1; }
+      100% { transform: scale(0.9); opacity: 0.8; }
     }
 
     /* Chapter 6: Sky Blue Closing Invitation */

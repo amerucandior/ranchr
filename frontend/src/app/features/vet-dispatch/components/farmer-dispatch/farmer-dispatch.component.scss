@@ -134,6 +134,66 @@
   }
 }
 
+.selected-straw-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #f0fdf4;
+  border: 1.5px solid #15803d;
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+  margin-bottom: 1.25rem;
+
+  .straw-icon {
+    font-size: 1.5rem;
+  }
+
+  .straw-details {
+    display: flex;
+    flex-direction: column;
+    strong {
+      color: #166534;
+      font-size: 0.95rem;
+    }
+    span {
+      color: #4b5563;
+      font-size: 0.8rem;
+    }
+  }
+}
+
+.emergency-assurance-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  background: rgba(232, 254, 133, 0.2);
+  border: 1px solid #07503f;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.25rem;
+
+  .assurance-icon {
+    font-size: 1.1rem;
+    color: #07503f;
+    flex-shrink: 0;
+  }
+
+  .assurance-text {
+    display: flex;
+    flex-direction: column;
+    strong {
+      color: #07503f;
+      font-size: 0.85rem;
+      margin-bottom: 0.15rem;
+    }
+    span {
+      color: #374151;
+      font-size: 0.78rem;
+      line-height: 1.35;
+    }
+  }
+}
+
 .mode-toggle {
   display: grid;
   grid-template-columns: 1fr 1fr;

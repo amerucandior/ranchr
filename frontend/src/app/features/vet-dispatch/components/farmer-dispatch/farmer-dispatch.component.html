@@ -46,6 +46,18 @@
   <!-- Dispatch Request Form -->
   <section class="form-card">
     <h3>Fast-Track Veterinary Dispatch</h3>
+
+    <!-- Pre-selected Genetics Straw Banner -->
+    @if (selectedStrawInfo(); as straw) {
+      <div class="selected-straw-banner">
+        <span class="straw-icon">🧬</span>
+        <div class="straw-details">
+          <strong>Pre-Selected Genetics: {{ straw.breed }}</strong>
+          <span>Listing #{{ straw.listingId }} · Auto-linked to this emergency dispatch</span>
+        </div>
+      </div>
+    }
+
     <form [formGroup]="dispatchForm" (ngSubmit)="submitDispatch()">
       
       <!-- Urgency Toggle -->
@@ -61,6 +73,17 @@
           <span class="toggle-desc">Standard veterinary inspection or clinical consultation</span>
         </label>
       </div>
+
+      <!-- Zero-Drop Guarantee Banner for Heat Alerts -->
+      @if (dispatchForm.get('isHeatAlert')?.value === true) {
+        <div class="emergency-assurance-banner">
+          <span class="assurance-icon">⚡</span>
+          <div class="assurance-text">
+            <strong>Zero-Drop KVB Broadcast Guarantee</strong>
+            <span>This alert will broadcast simultaneously to all registered KVB officers within your county via SMS and real-time push.</span>
+          </div>
+        </div>
+      }
 
       <!-- Animal Species Selector -->
       <div class="form-group">
