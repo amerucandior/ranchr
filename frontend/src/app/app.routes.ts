@@ -50,6 +50,6 @@ export const routes: Routes = [
     component: CycleListComponent,
     canActivate: [authGuard],
   },
-  { path: '', redirectTo: 'dispatch', pathMatch: 'full' },
-  { path: '**', redirectTo: 'dispatch' },
+  { path: '', redirectTo: 'marketplace', pathMatch: 'full' },
+  { path: '**', redirectTo: 'marketplace' },
 ];
