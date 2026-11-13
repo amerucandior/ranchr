@@ -13,6 +13,17 @@
 
   @media (max-width: 700px) {
     flex-direction: column;
+
+    .header-actions {
+      width: 100%;
+      flex-direction: column;
+
+      .btn-new-cycle,
+      .btn-scheduler {
+        width: 100%;
+        text-align: center;
+      }
+    }
   }
 
   h2 {

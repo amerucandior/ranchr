@@ -472,6 +472,12 @@ import { AuthService } from '../../../../core/services/auth.service';
       padding: 80px 24px;
       color: #ffffff;
       box-shadow: 0 12px 36px rgba(7, 80, 63, 0.12);
+
+      @media (max-width: 640px) {
+        min-height: auto;
+        padding: 48px 16px;
+        border-radius: 14px;
+      }
     }
 
     .scenic-backdrop {
@@ -530,7 +536,7 @@ import { AuthService } from '../../../../core/services/auth.service';
     .scenic-headline {
       font-family: var(--font-serif);
       font-weight: 300;
-      font-size: clamp(38px, 5.2vw, 65px);
+      font-size: clamp(30px, 6vw, 65px);
       line-height: 1.06;
       margin: 0 0 20px 0;
       letter-spacing: -0.01em;
@@ -559,6 +565,23 @@ import { AuthService } from '../../../../core/services/auth.service';
       gap: 20px;
       flex-wrap: wrap;
       margin-bottom: 45px;
+
+      @media (max-width: 640px) {
+        flex-direction: column;
+        width: 100%;
+        gap: 12px;
+        align-items: stretch;
+
+        .arva-capsule-primary,
+        .arva-capsule-secondary {
+          width: 100%;
+          justify-content: center;
+        }
+
+        .urgent-action {
+          width: 100%;
+        }
+      }
 
       .urgent-action {
         border: 1.5px solid var(--color-lime);
@@ -602,6 +625,10 @@ import { AuthService } from '../../../../core/services/auth.service';
     .benefits-chapter {
       padding: 90px 24px;
       background: var(--color-canvas);
+
+      @media (max-width: 640px) {
+        padding: 50px 16px;
+      }
     }
 
     .chapter-container {
@@ -618,6 +645,19 @@ import { AuthService } from '../../../../core/services/auth.service';
 
       @media (max-width: 960px) {
         grid-template-columns: 1fr;
+        display: flex;
+        flex-direction: column;
+
+        .benefit-photo-frame {
+          order: -1;
+          min-height: 240px;
+          max-height: 320px;
+          border-radius: 20px;
+        }
+
+        .benefit-panel {
+          border-radius: 20px;
+        }
       }
 
       &.reverse {
@@ -831,6 +871,12 @@ import { AuthService } from '../../../../core/services/auth.service';
       border-radius: 20px;
       padding: 30px;
       overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+
+      @media (max-width: 640px) {
+        padding: 16px;
+        border-radius: 14px;
+      }
 
       .reach-diagram {
         width: 100%;
@@ -843,6 +889,10 @@ import { AuthService } from '../../../../core/services/auth.service';
     .testimonial-chapter {
       padding: 90px 24px;
       background: var(--color-canvas);
+
+      @media (max-width: 640px) {
+        padding: 50px 16px;
+      }
     }
 
     .testimonial-grid {
@@ -863,6 +913,16 @@ import { AuthService } from '../../../../core/services/auth.service';
 
         @media (max-width: 600px) {
           grid-template-columns: 1fr;
+          min-height: auto;
+
+          .quote-photo-side {
+            height: 200px;
+            order: -1;
+          }
+
+          .quote-text-side {
+            padding: 24px 20px;
+          }
         }
 
         &.card-blue {
@@ -930,6 +990,10 @@ import { AuthService } from '../../../../core/services/auth.service';
     .catalog-chapter {
       background: var(--color-cream);
       padding: 110px 24px;
+
+      @media (max-width: 640px) {
+        padding: 60px 16px;
+      }
     }
 
     .catalog-header {
@@ -961,6 +1025,12 @@ import { AuthService } from '../../../../core/services/auth.service';
       margin-bottom: 50px;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
 
+      @media (max-width: 640px) {
+        padding: 16px;
+        border-radius: 14px;
+        margin-bottom: 30px;
+      }
+
       .toolbar-search-row {
         display: grid;
         grid-template-columns: 2fr 1fr auto;
@@ -969,6 +1039,11 @@ import { AuthService } from '../../../../core/services/auth.service';
 
         @media (max-width: 768px) {
           grid-template-columns: 1fr;
+
+          .btn-filter-apply {
+            height: 44px;
+            width: 100%;
+          }
         }
 
         .search-field {
@@ -1166,6 +1241,22 @@ import { AuthService } from '../../../../core/services/auth.service';
         padding-top: 12px;
         border-top: 1px solid rgba(0, 0, 0, 0.08);
 
+        @media (max-width: 480px) {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 12px;
+
+          .card-actions {
+            width: 100%;
+            justify-content: space-between;
+
+            .btn-card-dispatch {
+              flex: 1;
+              justify-content: center;
+            }
+          }
+        }
+
         .card-price-block {
           .price-caption {
             display: block;
@@ -1297,6 +1388,20 @@ import { AuthService } from '../../../../core/services/auth.service';
       padding: 130px 24px;
       text-align: center;
       color: var(--color-ink);
+
+      @media (max-width: 640px) {
+        padding: 70px 16px;
+        border-radius: 28px 28px 0 0;
+
+        .closing-actions {
+          width: 100%;
+
+          .arva-capsule-primary {
+            width: 100%;
+            justify-content: center;
+          }
+        }
+      }
 
       .closing-content {
         max-width: 760px;
