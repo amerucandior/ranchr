@@ -1,3 +1,4 @@
+import { IconComponent } from '../../../../shared/components/icon/icon.component';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -8,7 +9,7 @@ import { KycStatus, ServicesOffered, VetProfileResponse } from '../../../../core
 @Component({
   selector: 'app-kyc-verification',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [IconComponent, CommonModule, ReactiveFormsModule],
   template: `
     <div class="kyc-container">
       <div class="kyc-header">
@@ -26,7 +27,7 @@ import { KycStatus, ServicesOffered, VetProfileResponse } from '../../../../core
       <!-- Section 1: Phone & National ID Verification -->
       <div class="card">
         <div class="card-title">
-          <span class="icon">📱</span>
+          <span class="icon"><app-icon name="smartphone" /></span>
           <div>
             <h3>Phone & National ID Verification</h3>
             <p>Required for two-way SMS alerts, dispatch notifications, and marketplace interactions.</p>
@@ -35,7 +36,7 @@ import { KycStatus, ServicesOffered, VetProfileResponse } from '../../../../core
 
         @if (kycStatus()?.verified) {
           <div class="verified-badge">
-            <span class="badge-icon">✓</span>
+            <span class="badge-icon"><app-icon name="check" /></span>
             <div class="badge-content">
               <strong>Verified Identity</strong>
               <div class="details">
@@ -119,7 +120,7 @@ import { KycStatus, ServicesOffered, VetProfileResponse } from '../../../../core
       @if (authService.isVet()) {
         <div class="card mt-4">
           <div class="card-title">
-            <span class="icon">🩺</span>
+            <span class="icon"><app-icon name="stethoscope" /></span>
             <div>
               <h3>Kenya Veterinary Board (KVB) Accreditation</h3>
               <p>KVB registration license and practicing credential validation for clinical dispatch.</p>

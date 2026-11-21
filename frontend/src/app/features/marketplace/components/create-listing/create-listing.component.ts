@@ -1,3 +1,4 @@
+import { IconComponent } from '../../../../shared/components/icon/icon.component';
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -8,7 +9,7 @@ import { Gender, ListingServiceType } from '../../models/listing.models';
 @Component({
   selector: 'app-create-listing',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [IconComponent, CommonModule, ReactiveFormsModule, RouterLink],
   template: `
     <div class="create-listing-wrapper">
       <div class="header-nav">
@@ -17,7 +18,7 @@ import { Gender, ListingServiceType } from '../../models/listing.models';
 
       <div class="card">
         <div class="card-title">
-          <span class="icon">🐂</span>
+          <span class="icon"><app-icon name="paw" /></span>
           <div>
             <h2>Publish Livestock Listing</h2>
             <p class="subtitle">Showcase dairy & beef breeding stock, artificial insemination straws, and milk metrics.</p>
@@ -137,8 +138,8 @@ import { Gender, ListingServiceType } from '../../models/listing.models';
               <div class="preview-grid">
                 @for (file of selectedFiles; track file.name; let i = $index) {
                   <div class="preview-item">
-                    <span class="file-name">📷 {{ file.name }}</span>
-                    <button type="button" class="btn-remove-file" (click)="removeFile(i)">✕</button>
+                    <span class="file-name"><app-icon name="camera" /> {{ file.name }}</span>
+                    <button type="button" class="btn-remove-file" (click)="removeFile(i)"><app-icon name="x" /></button>
                   </div>
                 }
               </div>

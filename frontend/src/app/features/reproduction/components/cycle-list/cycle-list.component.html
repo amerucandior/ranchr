@@ -2,17 +2,14 @@
   <!-- Header -->
   <header class="repro-header">
     <div>
-      <h2>21-Day Reproductive Lifecycle Calendar</h2>
+      <h2>My animals: breeding checks</h2>
       <p class="subtitle">
         Automated tracking of estrus non-return, 60-day veterinary pregnancy diagnosis, and 280-day gestation to birth.
       </p>
     </div>
     <div class="header-actions">
-      <button type="button" class="btn-scheduler" (click)="triggerSchedulerNow()">
-        &#9881; Test Daily Alert Cron
-      </button>
       <button type="button" class="btn-new-cycle" (click)="openCreateModal()">
-        + Log Insemination Event
+        + Log a breeding
       </button>
     </div>
   </header>
@@ -28,7 +25,7 @@
       <h3>No Tracked Animals Yet</h3>
       <p>When veterinary artificial insemination is completed through the dispatch engine, reproductive milestones are automatically scheduled here.</p>
       <button type="button" class="btn-new-cycle" (click)="openCreateModal()">
-        + Register Breeding Event Manually
+        + Log a breeding
       </button>
     </div>
   } @else {
@@ -41,7 +38,7 @@
               <span class="tag-badge">&#127991; {{ cycle.animalIdentifier }}</span>
               <span class="species-text">({{ cycle.animalSpecies }})</span>
             </div>
-            <span class="status-pill" [attr.data-status]="cycle.status">{{ cycle.status }}</span>
+            <span class="status-pill" [attr.data-status]="cycle.status">{{ cycle.status | statusLabel }}</span>
           </div>
 
           <div class="straw-line">
@@ -83,13 +80,13 @@
                     class="btn-action heat-btn"
                     [disabled]="actionInProgressId() === cycle.id"
                     (click)="recordHeatReturned(cycle)">
-                    &#9888; Heat Returned (Failed)
+                    <app-icon name="alert" /> Heat Returned (Failed)
                   </button>
                 </div>
               } @else if (cycle.status === 'HEAT_RETURNED') {
                 <div class="milestone-actions">
                   <a routerLink="/dispatch" class="btn-action heat-btn" style="text-decoration: none; display: inline-block;">
-                    ⚡ Dispatch Repeat AI
+                    <app-icon name="bolt" /> Dispatch Repeat AI
                   </a>
                 </div>
               }
@@ -109,7 +106,7 @@
                 @if (cycle.status === 'INSEMINATED') {
                   <span>{{ cycle.daysUntilPregnancyDiagnosis }} days until PD</span>
                 } @else if (cycle.status === 'PREGNANCY_CONFIRMED' || cycle.status === 'CALVED') {
-                  <span class="text-passed">&#10003; Pregnant Confirmed</span>
+                  <span class="text-passed"><app-icon name="check" /> Pregnant Confirmed</span>
                 } @else {
                   <span>N/A</span>
                 }
@@ -122,7 +119,7 @@
                     class="btn-action confirm-btn"
                     [disabled]="actionInProgressId() === cycle.id"
                     (click)="confirmPregnancy(cycle)">
-                    &#10003; Confirm Gestation
+                    <app-icon name="check" /> Confirm Gestation
                   </button>
                 </div>
               }
@@ -142,7 +139,7 @@
                 @if (cycle.status === 'PREGNANCY_CONFIRMED') {
                   <span>{{ cycle.daysUntilCalving }} days to calving</span>
                 } @else if (cycle.status === 'CALVED') {
-                  <span class="text-passed">&#10003; Calved Successfully</span>
+                  <span class="text-passed"><app-icon name="check" /> Calved Successfully</span>
                 } @else {
                   <span>Awaiting PD</span>
                 }

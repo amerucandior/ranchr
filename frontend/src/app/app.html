@@ -12,17 +12,23 @@
       <!-- Left Audience Links -->
       <nav class="nav-links-left">
         <a routerLink="/marketplace" routerLinkActive="active" class="nav-item">
-          Genetics Catalog
+          Browse genetics
         </a>
         @if (authService.isAuthenticated()) {
-          <a routerLink="/dispatch" routerLinkActive="active" class="nav-item">
-            Heat Dispatch
-          </a>
-          <a routerLink="/reproduction" routerLinkActive="active" class="nav-item">
-            21-Day Calendar
-          </a>
+          @if (authService.isVet()) {
+            <a routerLink="/vet-console" routerLinkActive="active" class="nav-item">
+              Open requests
+            </a>
+          } @else {
+            <a routerLink="/dispatch" routerLinkActive="active" class="nav-item">
+              Request a vet
+            </a>
+            <a routerLink="/reproduction" routerLinkActive="active" class="nav-item">
+              My animals
+            </a>
+          }
           <a routerLink="/connections" routerLinkActive="active" class="nav-item">
-            Inquiries
+            Messages
           </a>
         }
       </nav>
@@ -42,11 +48,6 @@
         </span>
 
         @if (authService.isAuthenticated(); as user) {
-          @if (authService.isVet()) {
-            <a routerLink="/vet-console" routerLinkActive="active" class="btn-vet-console">
-              Vet Console
-            </a>
-          }
           <div class="user-pill">
             <span class="user-role">{{ authService.isVet() ? 'KVB VET' : 'BREEDER' }}</span>
             <span class="username">&#64;{{ authService.currentUser()?.username }}</span>
@@ -63,33 +64,36 @@
   <!-- Mobile Bottom Tab Bar -->
   <nav class="mobile-tab-bar">
     <a routerLink="/marketplace" routerLinkActive="active" class="tab-item">
-      <span class="tab-icon">🐄</span>
+      <span class="tab-icon"><app-icon name="paw" /></span>
       <span class="tab-label">Catalog</span>
     </a>
     @if (authService.isAuthenticated()) {
-      <a routerLink="/dispatch" routerLinkActive="active" class="tab-item">
-        <span class="tab-icon">⚡</span>
-        <span class="tab-label">Dispatch</span>
-      </a>
-      <a routerLink="/reproduction" routerLinkActive="active" class="tab-item">
-        <span class="tab-icon">📅</span>
-        <span class="tab-label">Cycles</span>
-      </a>
+      @if (authService.isVet()) {
+        <a routerLink="/vet-console" routerLinkActive="active" class="tab-item">
+          <span class="tab-icon"><app-icon name="bike" /></span>
+          <span class="tab-label">Requests</span>
+        </a>
+      } @else {
+        <a routerLink="/dispatch" routerLinkActive="active" class="tab-item">
+          <span class="tab-icon"><app-icon name="bolt" /></span>
+          <span class="tab-label">Request vet</span>
+        </a>
+        <a routerLink="/reproduction" routerLinkActive="active" class="tab-item">
+          <span class="tab-icon"><app-icon name="calendar" /></span>
+          <span class="tab-label">Animals</span>
+        </a>
+      }
       <a routerLink="/connections" routerLinkActive="active" class="tab-item">
-        <span class="tab-icon">🤝</span>
-        <span class="tab-label">Inquiries</span>
-      </a>
-      <a routerLink="/vet-console" routerLinkActive="active" class="tab-item">
-        <span class="tab-icon">🏍️</span>
-        <span class="tab-label">Vet</span>
+        <span class="tab-icon"><app-icon name="handshake" /></span>
+        <span class="tab-label">Messages</span>
       </a>
     } @else {
       <a routerLink="/login" routerLinkActive="active" class="tab-item">
-        <span class="tab-icon">🔐</span>
+        <span class="tab-icon"><app-icon name="lock" /></span>
         <span class="tab-label">Sign In</span>
       </a>
       <a routerLink="/register" routerLinkActive="active" class="tab-item">
-        <span class="tab-icon">✨</span>
+        <span class="tab-icon"><app-icon name="sparkles" /></span>
         <span class="tab-label">Register</span>
       </a>
     }
@@ -113,15 +117,21 @@
             Receive zero-drop estrus notifications, new Friesian and Ayrshire straw consignments, and direct KVB officer availability.
           </p>
 
-          <form class="footer-subscribe-form" (submit)="$event.preventDefault()">
+          <form class="footer-subscribe-form" (submit)="$event.preventDefault(); joinRegister(contact.value)">
             <input
+              #contact
               type="text"
               class="footer-input"
-              placeholder="Enter phone number or email..." />
+              aria-label="Phone number or email"
+              placeholder="Enter phone number or email..."
+              (input)="footerMessage.set(null)" />
             <button type="submit" class="footer-btn-submit">
               JOIN REGISTER
             </button>
           </form>
+          @if (footerMessage(); as msg) {
+            <p class="footer-form-desc" role="status" aria-live="polite">{{ msg }}</p>
+          }
 
           <div class="footer-sms-direct">
             <span class="sms-badge">OFFLINE SMS</span>

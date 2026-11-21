@@ -1,3 +1,4 @@
+import { IconComponent } from '../../../../shared/components/icon/icon.component';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -9,7 +10,7 @@ import { ListingResponse } from '../../models/listing.models';
 @Component({
   selector: 'app-connections',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [IconComponent, CommonModule, FormsModule, RouterLink],
   template: `
     <div class="connections-wrapper">
       <div class="connections-header">
@@ -28,7 +29,7 @@ import { ListingResponse } from '../../models/listing.models';
       @if (targetListingId()) {
         <div class="inquiry-card">
           <div class="inquiry-header">
-            <span class="icon">✉️</span>
+            <span class="icon"><app-icon name="mail" /></span>
             <div>
               <h3>Send Inquiry to Seller</h3>
               <p>Express interest in this animal listing. Once accepted, seller contact details will be shared.</p>
@@ -38,7 +39,7 @@ import { ListingResponse } from '../../models/listing.models';
           @if (targetListing()) {
             <div class="listing-preview">
               <strong>{{ targetListing()?.breed || targetListing()?.animalType }}</strong>
-              <span>📍 {{ targetListing()?.location }}</span>
+              <span><app-icon name="pin" /> {{ targetListing()?.location }}</span>
               <span class="price">KES {{ targetListing()?.fee | number }}</span>
             </div>
           }
@@ -78,14 +79,14 @@ import { ListingResponse } from '../../models/listing.models';
           class="tab-btn"
           [class.active]="activeTab() === 'incoming'"
           (click)="switchTab('incoming')">
-          📥 Incoming Buyer Requests ({{ incomingRequests().length }})
+          <app-icon name="inbox" /> Incoming Buyer Requests ({{ incomingRequests().length }})
         </button>
         <button
           type="button"
           class="tab-btn"
           [class.active]="activeTab() === 'outgoing'"
           (click)="switchTab('outgoing')">
-          📤 My Sent Requests ({{ outgoingRequests().length }})
+          <app-icon name="send" /> My Sent Requests ({{ outgoingRequests().length }})
         </button>
       </div>
 
@@ -98,7 +99,7 @@ import { ListingResponse } from '../../models/listing.models';
           </div>
         } @else if (incomingRequests().length === 0) {
           <div class="empty-state">
-            <span class="empty-icon">📭</span>
+            <span class="empty-icon"><app-icon name="inbox" /></span>
             <p>No incoming buyer inquiries on your listings yet.</p>
           </div>
         } @else {
@@ -107,7 +108,7 @@ import { ListingResponse } from '../../models/listing.models';
               <div class="request-item">
                 <div class="req-main">
                   <div class="user-meta">
-                    <span class="avatar">🧑‍🌾</span>
+                    <span class="avatar"><app-icon name="user" /></span>
                     <div>
                       <strong>Buyer: &#64;{{ req.interestedUsername || 'Interested Buyer' }}</strong>
                       <span class="date">{{ req.createdAt | date:'medium' }}</span>
@@ -147,7 +148,7 @@ import { ListingResponse } from '../../models/listing.models';
           </div>
         } @else if (outgoingRequests().length === 0) {
           <div class="empty-state">
-            <span class="empty-icon">📤</span>
+            <span class="empty-icon"><app-icon name="send" /></span>
             <p>You have not submitted inquiries on any livestock listings yet.</p>
             <a routerLink="/marketplace" class="btn-browse">Browse Livestock Catalog</a>
           </div>
@@ -157,7 +158,7 @@ import { ListingResponse } from '../../models/listing.models';
               <div class="request-item">
                 <div class="req-main">
                   <div class="user-meta">
-                    <span class="avatar">🐄</span>
+                    <span class="avatar"><app-icon name="paw" /></span>
                     <div>
                       <strong>Seller: &#64;{{ req.ownerUsername || 'Listing Owner' }}</strong>
                       <span class="date">{{ req.createdAt | date:'medium' }}</span>
@@ -171,7 +172,7 @@ import { ListingResponse } from '../../models/listing.models';
                 <div class="req-status-actions">
                   <span class="status-badge" [ngClass]="req.status">{{ req.status }}</span>
                   @if (req.status === 'ACCEPTED') {
-                    <span class="accepted-note">✓ Request Accepted! Seller will reach out.</span>
+                    <span class="accepted-note"><app-icon name="check" /> Request Accepted! Seller will reach out.</span>
                   }
                 </div>
               </div>

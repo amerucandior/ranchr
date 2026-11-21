@@ -1,3 +1,4 @@
+import { IconComponent } from '../../../../shared/components/icon/icon.component';
 import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -10,11 +11,13 @@ import {
   VetProfileResponseDto,
 } from '../../models/vet-dispatch.models';
 import { AuthService } from '../../../../core/services/auth.service';
+import { WebSocketService } from '../../../../core/services/websocket.service';
+import { StatusLabelPipe } from '../../../../core/pipes/status-label.pipe';
 
 @Component({
   selector: 'app-farmer-dispatch',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [IconComponent, CommonModule, ReactiveFormsModule, RouterLink, StatusLabelPipe],
   templateUrl: './farmer-dispatch.component.html',
   styleUrls: ['./farmer-dispatch.component.scss'],
 })
@@ -24,6 +27,12 @@ export class FarmerDispatchComponent implements OnInit, OnDestroy {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  readonly wsService = inject(WebSocketService);
+
+  /** Seconds left before a heat alert is actually sent; null when nothing is pending. */
+  readonly sendCountdown = signal<number | null>(null);
+  private sendTimer: ReturnType<typeof setInterval> | null = null;
+  private static readonly UNDO_SECONDS = 5;
 
   readonly availableVets = signal<VetProfileResponseDto[]>([]);
   readonly activeRequests = signal<ServiceRequestResponseDto[]>([]);
@@ -115,12 +124,41 @@ export class FarmerDispatchComponent implements OnInit, OnDestroy {
     });
   }
 
+  /** Validates, then gives the user a short undo window before broadcasting. */
   submitDispatch(): void {
     if (this.dispatchForm.invalid) {
       this.dispatchForm.markAllAsTouched();
       return;
     }
+    if (this.sendCountdown() !== null || this.isSubmitting()) return;
 
+    this.errorMessage.set(null);
+    this.successMessage.set(null);
+    this.sendCountdown.set(FarmerDispatchComponent.UNDO_SECONDS);
+    this.sendTimer = setInterval(() => {
+      const left = (this.sendCountdown() ?? 0) - 1;
+      if (left <= 0) {
+        this.clearSendTimer();
+        this.sendDispatch();
+      } else {
+        this.sendCountdown.set(left);
+      }
+    }, 1000);
+  }
+
+  cancelSend(): void {
+    this.clearSendTimer();
+  }
+
+  private clearSendTimer(): void {
+    if (this.sendTimer) {
+      clearInterval(this.sendTimer);
+      this.sendTimer = null;
+    }
+    this.sendCountdown.set(null);
+  }
+
+  private sendDispatch(): void {
     this.isSubmitting.set(true);
     this.errorMessage.set(null);
     this.successMessage.set(null);
@@ -138,16 +176,9 @@ export class FarmerDispatchComponent implements OnInit, OnDestroy {
     this.vetService.createRequest(dto).subscribe({
       next: (res) => {
         this.isSubmitting.set(false);
-        this.successMessage.set(
-          val.isHeatAlert
-            ? 'Heat alert broadcast sent to all nearby KVB veterinary officers via SMS and WebSocket!'
-            : 'Service request submitted successfully!'
-        );
-        this.loadMyRequests();
-        this.dispatchForm.patchValue({
-          location: '',
-          targetVetId: '',
-        });
+        this.dispatchForm.patchValue({ location: '', targetVetId: '' });
+        // Hand off to the live tracker so the user sees progress right away.
+        this.router.navigate(['/tracker', res.serviceId]);
       },
       error: (err) => {
         this.isSubmitting.set(false);
@@ -169,6 +200,7 @@ export class FarmerDispatchComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.clearSendTimer();
     if (this.timerInterval) {
       clearInterval(this.timerInterval);
     }

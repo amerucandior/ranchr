@@ -64,7 +64,8 @@ describe('FarmerDispatchComponent', () => {
     expect(component.activeRequests()[0].animalSpecies).toBe('Cow / Heifer');
   });
 
-  it('should submit heat alert dispatch on valid form submission', () => {
+  it('should submit heat alert dispatch after the undo window', () => {
+    vi.useFakeTimers();
     const createSpy = vi.spyOn(vetService, 'createRequest').mockReturnValue(of(mockRequest));
 
     component.dispatchForm.patchValue({
@@ -75,6 +76,11 @@ describe('FarmerDispatchComponent', () => {
     });
 
     component.submitDispatch();
+    expect(createSpy).not.toHaveBeenCalled();
+    expect(component.sendCountdown()).toBe(5);
+
+    vi.advanceTimersByTime(5000);
+    vi.useRealTimers();
 
     expect(createSpy).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -82,6 +88,20 @@ describe('FarmerDispatchComponent', () => {
         location: 'Njoro Agricultural Ward',
       })
     );
+  });
+
+  it('should not send when the user cancels during the undo window', () => {
+    vi.useFakeTimers();
+    const createSpy = vi.spyOn(vetService, 'createRequest').mockReturnValue(of(mockRequest));
+    component.dispatchForm.patchValue({ location: 'Njoro Agricultural Ward' });
+
+    component.submitDispatch();
+    component.cancelSend();
+    vi.advanceTimersByTime(10000);
+    vi.useRealTimers();
+
+    expect(createSpy).not.toHaveBeenCalled();
+    expect(component.sendCountdown()).toBeNull();
   });
 
   it('should set selectedStrawInfo and patch description when genetics query params arrive', () => {

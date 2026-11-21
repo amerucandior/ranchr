@@ -28,17 +28,26 @@
     </div>
   </header>
 
+  @if (!wsService.isConnected()) {
+    <div class="alert alert-danger" role="status">
+      <span class="icon"><app-icon name="alert" /></span>
+      <span>
+        You are offline. Requests may not reach vets. No signal? Text <strong>START</strong> to <strong>20880</strong>.
+      </span>
+    </div>
+  }
+
   <!-- Notification banners -->
   @if (successMessage()) {
     <div class="alert alert-success">
-      <span class="icon">&#10003;</span>
+      <span class="icon"><app-icon name="check" /></span>
       <span>{{ successMessage() }}</span>
     </div>
   }
 
   @if (errorMessage()) {
     <div class="alert alert-danger">
-      <span class="icon">&#9888;</span>
+      <span class="icon"><app-icon name="alert" /></span>
       <span>{{ errorMessage() }}</span>
     </div>
   }
@@ -50,7 +59,7 @@
     <!-- Pre-selected Genetics Straw Banner -->
     @if (selectedStrawInfo(); as straw) {
       <div class="selected-straw-banner">
-        <span class="straw-icon">🧬</span>
+        <span class="straw-icon"><app-icon name="dna" /></span>
         <div class="straw-details">
           <strong>Pre-Selected Genetics: {{ straw.breed }}</strong>
           <span>Listing #{{ straw.listingId }} · Auto-linked to this emergency dispatch</span>
@@ -77,7 +86,7 @@
       <!-- Zero-Drop Guarantee Banner for Heat Alerts -->
       @if (dispatchForm.get('isHeatAlert')?.value === true) {
         <div class="emergency-assurance-banner">
-          <span class="assurance-icon">⚡</span>
+          <span class="assurance-icon"><app-icon name="bolt" /></span>
           <div class="assurance-text">
             <strong>Zero-Drop KVB Broadcast Guarantee</strong>
             <span>This alert will broadcast simultaneously to all registered KVB officers within your county via SMS and real-time push.</span>
@@ -131,22 +140,28 @@
           <select id="vetSelect" class="form-control" formControlName="targetVetId">
             <option value="">Broadcast to any online KVB verified practitioner</option>
             @for (vet of availableVets(); track vet.vetId) {
-              <option [value]="vet.vetId">{{ vet.kvbRegisteredName }} (Rating: {{ vet.rating || 5.0 }}★)</option>
+              <option [value]="vet.vetId">{{ vet.kvbRegisteredName }} (Rating: {{ vet.rating || 5.0 }}/5)</option>
             }
           </select>
         </div>
       }
 
-      <!-- Submit Button -->
+      <!-- Submit Button with undo window -->
+      @if (sendCountdown(); as left) {
+        <div class="alert alert-success" role="status" aria-live="polite">
+          <span>Sending alert in {{ left }}s...</span>
+          <button type="button" class="track-link" (click)="cancelSend()">Cancel</button>
+        </div>
+      }
       <button
         type="submit"
         class="submit-button"
         [class.urgent]="dispatchForm.get('isHeatAlert')?.value === true"
-        [disabled]="isSubmitting()">
+        [disabled]="isSubmitting() || sendCountdown() !== null">
         @if (isSubmitting()) {
-          <span>Broadcasting Alert...</span>
+          <span>Sending...</span>
         } @else {
-          <span>{{ dispatchForm.get('isHeatAlert')?.value ? '⚡ Dispatch Inseminator Now' : 'Request Vet Service' }}</span>
+          <span>@if (dispatchForm.get('isHeatAlert')?.value) { <app-icon name="bolt" /> Alert vets now } @else { Request a vet visit }</span>
         }
       </button>
     </form>
@@ -165,18 +180,18 @@
           <div class="request-card" [class.urgent-border]="req.status === 'PENDING'">
             <div class="card-header">
               <span class="species-badge">{{ req.animalSpecies }}</span>
-              <span class="status-badge" [attr.data-status]="req.status">{{ req.status }}</span>
+              <span class="status-badge" [attr.data-status]="req.status">{{ req.status | statusLabel }}</span>
             </div>
 
             <p class="symptoms-text"><strong>Symptoms:</strong> {{ req.symptoms }}</p>
-            <p class="location-text">📍 {{ req.location }}</p>
+            <p class="location-text"><app-icon name="pin" /> {{ req.location }}</p>
 
             @if (req.vetName) {
               <div class="assigned-vet">
                 <span class="vet-badge">KVB Certified</span>
                 <span class="vet-name">{{ req.vetName }}</span>
                 @if (req.vetPhone) {
-                  <a [href]="'tel:' + req.vetPhone" class="call-link">📞 {{ req.vetPhone }}</a>
+                  <a [href]="'tel:' + req.vetPhone" class="call-link"><app-icon name="phone" /> {{ req.vetPhone }}</a>
                 }
               </div>
             }

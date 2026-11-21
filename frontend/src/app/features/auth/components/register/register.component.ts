@@ -1,13 +1,14 @@
+import { IconComponent } from '../../../../shared/components/icon/icon.component';
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [IconComponent, CommonModule, ReactiveFormsModule, RouterLink],
   template: `
     <div class="register-wrapper">
       <div class="register-card">
@@ -29,14 +30,14 @@ import { AuthService } from '../../../../core/services/auth.service';
             <div class="role-grid">
               <label class="role-card" [class.selected]="registerForm.get('role')?.value === 'USER'">
                 <input type="radio" formControlName="role" value="USER" class="sr-only" />
-                <span class="role-icon">🧑‍🌾</span>
+                <span class="role-icon"><app-icon name="user" /></span>
                 <span class="role-title">Farmer / Breeder</span>
                 <span class="role-desc">Manage herd estrus alerts & source certified AI semen straws</span>
               </label>
 
               <label class="role-card" [class.selected]="registerForm.get('role')?.value === 'VET'">
                 <input type="radio" formControlName="role" value="VET" class="sr-only" />
-                <span class="role-icon">👨‍⚕️</span>
+                <span class="role-icon"><app-icon name="stethoscope" /></span>
                 <span class="role-title">KVB Veterinary Officer</span>
                 <span class="role-desc">Receive emergency rural heat calls & field clinical jobs</span>
               </label>
@@ -45,7 +46,7 @@ import { AuthService } from '../../../../core/services/auth.service';
 
           <!-- KVB Regulatory Trust Badge -->
           <div class="kvb-trust-badge" [class.highlight]="registerForm.get('role')?.value === 'VET'">
-            <span class="trust-icon">🛡️</span>
+            <span class="trust-icon"><app-icon name="shield" /></span>
             <div class="trust-content">
               <strong>Kenya Veterinary Board (KVB) Verified Network</strong>
               <span>
@@ -361,6 +362,7 @@ export class RegisterComponent {
   private readonly fb = inject(FormBuilder);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
   readonly isLoading = signal<boolean>(false);
   readonly errorMessage = signal<string | null>(null);
@@ -371,6 +373,13 @@ export class RegisterComponent {
     password: ['', [Validators.required, Validators.minLength(6)]],
     role: ['USER' as 'USER' | 'VET', Validators.required],
   });
+
+  constructor() {
+    const email = this.route.snapshot.queryParamMap.get('email');
+    if (email) {
+      this.registerForm.patchValue({ email });
+    }
+  }
 
   submitRegister(): void {
     if (this.registerForm.invalid) return;

@@ -1,3 +1,4 @@
+import { IconComponent } from '../../../../shared/components/icon/icon.component';
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -7,7 +8,7 @@ import { AuthService } from '../../../../core/services/auth.service';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [IconComponent, CommonModule, ReactiveFormsModule, RouterLink],
   template: `
     <div class="login-wrapper">
       <div class="login-card">
@@ -59,13 +60,13 @@ import { AuthService } from '../../../../core/services/auth.service';
               type="button"
               class="btn-quick-capsule"
               (click)="fillCredentials('farmer_demo', 'password123')">
-              🧑‍🌾 Farmer Demo
+              <app-icon name="user" /> Farmer Demo
             </button>
             <button
               type="button"
               class="btn-quick-capsule vet"
               (click)="fillCredentials('vet_kamau', 'password123')">
-              👨‍⚕️ KVB Vet Demo
+              <app-icon name="stethoscope" /> KVB Vet Demo
             </button>
           </div>
         </div>

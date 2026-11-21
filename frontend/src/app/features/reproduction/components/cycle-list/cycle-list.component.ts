@@ -1,3 +1,5 @@
+import { IconComponent } from '../../../../shared/components/icon/icon.component';
+import { StatusLabelPipe } from '../../../../core/pipes/status-label.pipe';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -11,7 +13,7 @@ import {
 @Component({
   selector: 'app-cycle-list',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [IconComponent, StatusLabelPipe, CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './cycle-list.component.html',
   styleUrls: ['./cycle-list.component.scss'],
 })

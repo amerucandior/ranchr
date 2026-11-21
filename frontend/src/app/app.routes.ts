@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
+import { roleGuard } from './core/guards/role.guard';
 import { LoginComponent } from './features/auth/components/login/login.component';
 import { RegisterComponent } from './features/auth/components/register/register.component';
 import { KycVerificationComponent } from './features/kyc/components/kyc-verification/kyc-verification.component';
@@ -33,12 +34,12 @@ export const routes: Routes = [
   {
     path: 'dispatch',
     component: FarmerDispatchComponent,
-    canActivate: [authGuard],
+    canActivate: [roleGuard('breeder')],
   },
   {
     path: 'vet-console',
     component: VetConsoleComponent,
-    canActivate: [authGuard],
+    canActivate: [roleGuard('vet')],
   },
   {
     path: 'tracker/:id',
@@ -48,7 +49,7 @@ export const routes: Routes = [
   {
     path: 'reproduction',
     component: CycleListComponent,
-    canActivate: [authGuard],
+    canActivate: [roleGuard('breeder')],
   },
   { path: '', redirectTo: 'marketplace', pathMatch: 'full' },
   { path: '**', redirectTo: 'marketplace' },

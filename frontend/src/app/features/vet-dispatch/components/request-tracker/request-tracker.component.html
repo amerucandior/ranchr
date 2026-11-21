@@ -33,7 +33,7 @@
             [class.active]="isStepActive(step.status)">
             <div class="step-circle">
               @if (isStepCompleted(step.status) && !isStepActive(step.status)) {
-                <span>&#10003;</span>
+                <span><app-icon name="check" /></span>
               } @else {
                 <span>{{ i + 1 }}</span>
               }
@@ -61,7 +61,7 @@
             </div>
             @if (req.vetPhone) {
               <a [href]="'tel:' + req.vetPhone" class="btn-call">
-                📞 Call Vet
+                <app-icon name="phone" /> Call Vet
               </a>
             }
           </div>
@@ -104,7 +104,7 @@
           <h3>Service Feedback & Rating</h3>
           @if (ratingSubmitted()) {
             <div class="rating-success">
-              <p>&#10003; Thank you! Your rating helps maintain KVB veterinary service quality.</p>
+              <p><app-icon name="check" /> Thank you! Your rating helps maintain KVB veterinary service quality.</p>
             </div>
           } @else {
             <p>How was the artificial insemination / clinical visit with {{ req.vetName }}?</p>
@@ -115,7 +115,7 @@
                   class="star-btn"
                   [class.active]="s <= ratingStars"
                   (click)="ratingStars = s">
-                  ★
+                  <app-icon name="star" />
                 </button>
               }
               <span class="star-score">({{ ratingStars }} of 5 Stars)</span>

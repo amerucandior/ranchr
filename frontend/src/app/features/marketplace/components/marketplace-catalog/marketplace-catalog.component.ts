@@ -1,3 +1,4 @@
+import { IconComponent } from '../../../../shared/components/icon/icon.component';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -9,7 +10,7 @@ import { AuthService } from '../../../../core/services/auth.service';
 @Component({
   selector: 'app-marketplace-catalog',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [IconComponent, CommonModule, FormsModule, RouterLink],
   template: `
     <div class="arva-page">
       <!-- Chapter 1: Scenic Promise Opening (10px white frame, 18px corners) -->
@@ -73,7 +74,7 @@ import { AuthService } from '../../../../core/services/auth.service';
 
               <div class="benefit-grid-2x2">
                 <div class="benefit-item">
-                  <span class="benefit-icon">🧬</span>
+                  <span class="benefit-icon"><app-icon name="dna" /></span>
                   <div class="benefit-item-content">
                     <h4>Traceable Straw Batches</h4>
                     <p>Every straw is verified by sire pedigree and official batch numbers.</p>
@@ -81,7 +82,7 @@ import { AuthService } from '../../../../core/services/auth.service';
                 </div>
 
                 <div class="benefit-item">
-                  <span class="benefit-icon">⚡</span>
+                  <span class="benefit-icon"><app-icon name="bolt" /></span>
                   <div class="benefit-item-content">
                     <h4>Zero-Drop Estrus Window</h4>
                     <p>Emergency dispatch alerts matching nearest available KVB officers.</p>
@@ -89,7 +90,7 @@ import { AuthService } from '../../../../core/services/auth.service';
                 </div>
 
                 <div class="benefit-item">
-                  <span class="benefit-icon">📅</span>
+                  <span class="benefit-icon"><app-icon name="calendar" /></span>
                   <div class="benefit-item-content">
                     <h4>21-Day Gestation Cycle</h4>
                     <p>Automated SMS timeline reminders for return-to-heat checks.</p>
@@ -97,7 +98,7 @@ import { AuthService } from '../../../../core/services/auth.service';
                 </div>
 
                 <div class="benefit-item">
-                  <span class="benefit-icon">🛡️</span>
+                  <span class="benefit-icon"><app-icon name="shield" /></span>
                   <div class="benefit-item-content">
                     <h4>Verified KVB Officers</h4>
                     <p>All clinical care performed by licensed Kenyan veterinary professionals.</p>
@@ -118,7 +119,7 @@ import { AuthService } from '../../../../core/services/auth.service';
 
               <div class="benefit-grid-2x2">
                 <div class="benefit-item item-dark">
-                  <span class="benefit-icon">📲</span>
+                  <span class="benefit-icon"><app-icon name="smartphone" /></span>
                   <div class="benefit-item-content">
                     <h4>Direct Paddock SMS Alerts</h4>
                     <p>Receive immediate alerts with farmer distance, urgency, and cow history.</p>
@@ -126,7 +127,7 @@ import { AuthService } from '../../../../core/services/auth.service';
                 </div>
 
                 <div class="benefit-item item-dark">
-                  <span class="benefit-icon">📶</span>
+                  <span class="benefit-icon"><app-icon name="signal" /></span>
                   <div class="benefit-item-content">
                     <h4>Offline Two-Way Dispatch</h4>
                     <p>Accept calls and mark jobs complete using text commands to 20880.</p>
@@ -134,7 +135,7 @@ import { AuthService } from '../../../../core/services/auth.service';
                 </div>
 
                 <div class="benefit-item item-dark">
-                  <span class="benefit-icon">📋</span>
+                  <span class="benefit-icon"><app-icon name="clipboard" /></span>
                   <div class="benefit-item-content">
                     <h4>Straw Traceability Logging</h4>
                     <p>Record semen straw serials directly into the automated herd ledger.</p>
@@ -142,7 +143,7 @@ import { AuthService } from '../../../../core/services/auth.service';
                 </div>
 
                 <div class="benefit-item item-dark">
-                  <span class="benefit-icon">⭐</span>
+                  <span class="benefit-icon"><app-icon name="star" /></span>
                   <div class="benefit-item-content">
                     <h4>Regional Practitioner Reputation</h4>
                     <p>Build 5-star ratings from verified breeders across your county.</p>
@@ -201,31 +202,31 @@ import { AuthService } from '../../../../core/services/auth.service';
 
               <!-- Step 1 -->
               <circle cx="100" cy="90" r="32" fill="#ffffff" stroke="#07503f" stroke-width="2" />
-              <text x="100" y="96" text-anchor="middle" font-size="20">🧑‍🌾</text>
+              <g transform="translate(92,80) scale(0.67)" stroke="#07503f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></g>
               <text x="100" y="145" text-anchor="middle" font-size="13" font-family="'Inter', sans-serif" fill="#212529" font-weight="600">Farmer Heat Alert</text>
               <text x="100" y="162" text-anchor="middle" font-size="11" font-family="'Inter', sans-serif" fill="#6d6d6d">Web or SMS 20880</text>
 
               <!-- Step 2 -->
               <circle cx="300" cy="90" r="32" fill="#e8fe85" stroke="#07503f" stroke-width="2" />
-              <text x="300" y="96" text-anchor="middle" font-size="20">⚡</text>
+              <g transform="translate(292,80) scale(0.67)" stroke="#07503f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></g>
               <text x="300" y="145" text-anchor="middle" font-size="13" font-family="'Inter', sans-serif" fill="#212529" font-weight="600">Priority Engine</text>
               <text x="300" y="162" text-anchor="middle" font-size="11" font-family="'Inter', sans-serif" fill="#6d6d6d">&lt; 15s Match</text>
 
               <!-- Step 3 -->
               <circle cx="500" cy="90" r="32" fill="#ffffff" stroke="#07503f" stroke-width="2" />
-              <text x="500" y="96" text-anchor="middle" font-size="20">👨‍⚕️</text>
+              <g transform="translate(492,80) scale(0.67)" stroke="#07503f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M11 2v2M5 2v2M5 3H4a2 2 0 0 0-2 2v4a6 6 0 0 0 12 0V5a2 2 0 0 0-2-2h-1"/><path d="M8 15a6 6 0 0 0 12 0v-3"/><circle cx="20" cy="10" r="2"/></g>
               <text x="500" y="145" text-anchor="middle" font-size="13" font-family="'Inter', sans-serif" fill="#212529" font-weight="600">KVB Officer Dispatched</text>
               <text x="500" y="162" text-anchor="middle" font-size="11" font-family="'Inter', sans-serif" fill="#6d6d6d">Direct Mobile Arrival</text>
 
               <!-- Step 4 -->
               <circle cx="700" cy="90" r="32" fill="#ffffff" stroke="#07503f" stroke-width="2" />
-              <text x="700" y="96" text-anchor="middle" font-size="20">🧬</text>
+              <g transform="translate(692,80) scale(0.67)" stroke="#07503f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M2 15c6.667-6 13.333 0 20-6"/><path d="M9 22c1.798-1.998 2.518-3.995 2.807-5.993"/><path d="M15 2c-1.798 1.998-2.518 3.995-2.807 5.993"/><path d="m17 6-2.5-2.5"/><path d="m14 8-1-1"/><path d="m7 18 2.5 2.5"/><path d="m3.5 14.5.5.5"/><path d="m20 9 .5.5"/><path d="m6.5 12.5 1 1"/><path d="m16.5 10.5 1 1"/><path d="m10 16 1.5 1.5"/></g>
               <text x="700" y="145" text-anchor="middle" font-size="13" font-family="'Inter', sans-serif" fill="#212529" font-weight="600">Straw Batch Logged</text>
               <text x="700" y="162" text-anchor="middle" font-size="11" font-family="'Inter', sans-serif" fill="#6d6d6d">Genetic Traceability</text>
 
               <!-- Step 5 -->
               <circle cx="820" cy="90" r="32" fill="#b2cee7" stroke="#07503f" stroke-width="2" />
-              <text x="820" y="96" text-anchor="middle" font-size="20">📅</text>
+              <g transform="translate(812,80) scale(0.67)" stroke="#07503f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></g>
               <text x="820" y="145" text-anchor="middle" font-size="13" font-family="'Inter', sans-serif" fill="#212529" font-weight="600">Day 21 SMS</text>
               <text x="820" y="162" text-anchor="middle" font-size="11" font-family="'Inter', sans-serif" fill="#6d6d6d">Gestation Guard</text>
             </svg>
@@ -289,7 +290,7 @@ import { AuthService } from '../../../../core/services/auth.service';
           <div class="editorial-toolbar">
             <div class="toolbar-search-row">
               <div class="search-field">
-                <span class="search-icon">🔍</span>
+                <span class="search-icon"><app-icon name="search" /></span>
                 <input
                   type="text"
                   [(ngModel)]="searchKeyword"
@@ -298,7 +299,7 @@ import { AuthService } from '../../../../core/services/auth.service';
               </div>
 
               <div class="search-field">
-                <span class="search-icon">📍</span>
+                <span class="search-icon"><app-icon name="pin" /></span>
                 <input
                   type="text"
                   [(ngModel)]="searchLocation"
@@ -355,7 +356,7 @@ import { AuthService } from '../../../../core/services/auth.service';
             </div>
           } @else if (listings().length === 0) {
             <div class="editorial-empty">
-              <span class="empty-mark">🌾</span>
+              <span class="empty-mark"><app-icon name="leaf" /></span>
               <h3>No livestock records match this search</h3>
               <p>Adjust your breed keyword or county location to discover active listings.</p>
               <button (click)="resetFilters()" class="btn-empty-reset">Reset Search</button>
@@ -370,7 +371,7 @@ import { AuthService } from '../../../../core/services/auth.service';
                       <img [src]="item.images[0].url" [alt]="item.breed || item.animalType" class="card-img" />
                     } @else {
                       <div class="card-placeholder">
-                        <span class="symbol">{{ item.gender === 'MALE' ? '🐂' : '🐄' }}</span>
+                        <span class="symbol"><app-icon name="paw" /></span>
                       </div>
                     }
 
@@ -381,7 +382,7 @@ import { AuthService } from '../../../../core/services/auth.service';
 
                   <!-- Editorial Text Content -->
                   <div class="card-meta">
-                    <span class="meta-location">📍 {{ item.location }}</span>
+                    <span class="meta-location"><app-icon name="pin" /> {{ item.location }}</span>
                     @if (item.ageYears !== undefined && item.ageYears !== null) {
                       <span class="meta-age">· {{ item.ageYears }}y {{ item.ageMonths || 0 }}m</span>
                     }
@@ -405,7 +406,7 @@ import { AuthService } from '../../../../core/services/auth.service';
                         class="btn-card-interest"
                         title="Express interest"
                         (click)="expressInterest(item)">
-                        ❤️ {{ item.interestCount }}
+                        <app-icon name="heart" /> {{ item.interestCount }}
                       </button>
                       @if (item.serviceType === 'ARTIFICIAL_INSEMINATION' || item.serviceType === 'BOTH') {
                         <a
@@ -413,7 +414,7 @@ import { AuthService } from '../../../../core/services/auth.service';
                           [queryParams]="{ listingId: item.id, breed: item.breed || item.animalType, fee: item.fee, location: item.location }"
                           class="btn-card-dispatch"
                           title="Dispatch KVB vet for this straw">
-                          ⚡ Dispatch AI
+                          <app-icon name="bolt" /> Dispatch AI
                         </a>
                       }
                       <a [routerLink]="['/connections']" [queryParams]="{ listingId: item.id }" class="btn-card-connect">

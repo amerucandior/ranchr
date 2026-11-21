@@ -58,13 +58,13 @@
               <span class="badge time">{{ req.createdAt | date:'shortTime' }}</span>
             </div>
 
-            <h4 class="farm-address">📍 {{ req.location }}</h4>
+            <h4 class="farm-address"><app-icon name="pin" /> {{ req.location }}</h4>
             <p class="symptoms"><strong>Heat signs:</strong> {{ req.symptoms }}</p>
 
             <div class="farmer-details">
               <span>Farmer: <strong>{{ req.farmerUsername }}</strong></span>
               @if (req.farmerPhone) {
-                <a [href]="'tel:' + req.farmerPhone" class="phone-link">📞 {{ req.farmerPhone }}</a>
+                <a [href]="'tel:' + req.farmerPhone" class="phone-link"><app-icon name="phone" /> {{ req.farmerPhone }}</a>
               }
             </div>
 
@@ -76,7 +76,7 @@
               @if (actionInProgressId() === req.serviceId) {
                 <span>Accepting...</span>
               } @else {
-                <span>⚡ ACCEPT DISPATCH</span>
+                <span><app-icon name="bolt" /> ACCEPT DISPATCH</span>
               }
             </button>
           </div>
@@ -109,7 +109,7 @@
               <div class="contact-box">
                 <span>Farmer: <strong>{{ duty.farmerUsername }}</strong></span>
                 @if (duty.farmerPhone) {
-                  <a [href]="'tel:' + duty.farmerPhone" class="duty-phone">📞 Call Farmer</a>
+                  <a [href]="'tel:' + duty.farmerPhone" class="duty-phone"><app-icon name="phone" /> Call Farmer</a>
                 }
               </div>
             </div>
@@ -122,7 +122,7 @@
                   class="action-btn start-btn"
                   [disabled]="actionInProgressId() === duty.serviceId"
                   (click)="startTrip(duty)">
-                  🏍️ Start Route / Arrive On Site
+                  <app-icon name="bike" /> Start Route / Arrive On Site
                 </button>
               }
 
@@ -131,12 +131,12 @@
                   type="button"
                   class="action-btn complete-btn"
                   (click)="openCompleteModal(duty)">
-                  💉 Complete & Record Straw Batch
+                  <app-icon name="syringe" /> Complete & Record Straw Batch
                 </button>
               }
 
               @if (duty.status === 'COMPLETED') {
-                <span class="completed-tag">&#10003; Service Completed & Recorded</span>
+                <span class="completed-tag"><app-icon name="check" /> Service Completed & Recorded</span>
               }
             </div>
           </div>
